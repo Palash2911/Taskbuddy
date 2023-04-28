@@ -1,70 +1,47 @@
 import 'package:flutter/material.dart';
 
-
-class cAppdrawer extends StatefulWidget {
-  const cAppdrawer({super.key});
-
-  @override
-  State<cAppdrawer> createState() => _cAppdrawerState();
-}
-
-class _cAppdrawerState extends State<cAppdrawer> {
-  var pp = "";
-  var name = "";
-  var authToken = "";
+class cAppDrawer extends StatelessWidget {
+  const cAppDrawer({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Color(0xfff1BB273),
+    return ListView(
+      padding: const EdgeInsets.all(0),
+      children: [
+        const DrawerHeader(
+          decoration: BoxDecoration(color: Colors.blue), //BoxDecoration
+          child: UserAccountsDrawerHeader(
+            decoration: BoxDecoration(color: Colors.blue),
+            accountName: Text(
+              "Dip Hire",
+              style: TextStyle(fontSize: 18),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 30.0,
-                  backgroundImage: pp.isNotEmpty
-                      ? Image.network(pp).image
-                      : const AssetImage('assets/images/user.png'),
-                ),
-                Text(
-                  name,
-                 
-                ),
-              ],
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text(' My Profile '),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CircleAvatar()
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text('help and support'),
-            onTap:(){}
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('LogOut'),
-            onTap: () {
-              
-            },
-          ),
-        ],
-      ),
+            accountEmail: Text("diphire111@gmail.com"),
+            currentAccountPictureSize: Size.square(50),
+            currentAccountPicture: CircleAvatar(
+              child: Text(
+                "D",
+              ), //Text
+            ), //circleAvatar
+          ), //UserAccountDrawerHeader
+        ), //DrawerHeader
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text(' My Profile '),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.logout),
+          title: const Text('LogOut'),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }
-

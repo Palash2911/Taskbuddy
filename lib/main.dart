@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:taskbuddy/views/homepage.dart';
+import 'package:taskbuddy/views/login.dart';
+import 'package:taskbuddy/views/taskpage.dart';
+import 'package:taskbuddy/views/utils/bottombar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,4 +22,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

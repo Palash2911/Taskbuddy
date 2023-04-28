@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/views/constants.dart';
+import 'package:taskbuddy/views/utils/taskPriority.dart';
 
 class ViewTask extends StatefulWidget {
   final String assignename;
@@ -107,27 +108,11 @@ class _ViewTaskState extends State<ViewTask> {
                           ),
                         ),
                         Divider(),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            const Icon(Icons.task),
-                            const SizedBox(width: 5),
-                            Text('Task Assigned by', style: kTextPopB14),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        ListTile(
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: CircleAvatar()),
-                          title: Text(
-                            widget.assignename,
-                            style: kTextPopM16,
-                          ),
-                        ),
+                        TaskPriority(priority: eTaskPriority.high)
                       ],
                     ),
                     const SizedBox(height: 10.0),
+                    Center(child: ElevatedButton(onPressed: (){}, child: Text("Mark as Complete")))
                   ],
                 ),
               ),
