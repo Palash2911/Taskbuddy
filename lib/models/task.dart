@@ -12,7 +12,6 @@
 //   });
 // }
 
-
 class Task {
   String dueDate;
   String title;
@@ -33,11 +32,11 @@ class Task {
 
 Task task = Task(
   dueDate: "2023-05-01",
-  title: "Complete Task",
+  title: "Complete this task right now",
   desc: "Lorem ipsum dolor sit amet",
-  assignees: ["John Doe", "Jane Smith"],
+  assignees: ["Dip", "Palash"],
   assigneeProfilePictures: [
-    "https://example.com/profile-pictures/john-doe.jpg",
-    "https://example.com/profile-pictures/jane-smith.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/1200px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/1200px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
   ],
 );
