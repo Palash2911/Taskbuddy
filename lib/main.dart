@@ -1,13 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:taskbuddy/views/homepage.dart';
-import 'package:taskbuddy/views/login.dart';
-import 'package:taskbuddy/views/taskpage.dart';
-import 'package:taskbuddy/views/utils/bottombar.dart';
+import 'package:provider/provider.dart';
+import 'package:taskbuddy/providers/auth_provider.dart';
+import 'package:taskbuddy/views/splashScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -16,9 +15,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (BuildContext context) => Auth(),
+        ),
+        // ChangeNotifierProvider(
+        //   create: (BuildContext context) => UserProvider(),
+        // ),
+        // ChangeNotifierProvider(
+        //   create: (BuildContext context) => (),
+        // ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }

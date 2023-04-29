@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:provider/provider.dart';
 import 'package:taskbuddy/providers/auth_provider.dart';
 import 'package:taskbuddy/views/constants.dart';
+import 'package:taskbuddy/views/otp.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -24,45 +26,47 @@ class _LoginScreenState extends State<LoginScreen> {
     _phoneController.text = "";
   }
 
-  // Future _sendOtp(BuildContext ctx) async {
-  //   final isValid = _form.currentState!.validate();
-  //   isLoading = true;
-  //   _form.currentState!.save();
-  //   if (isValid) {
-  //     await Provider.of<Auth>(ctx, listen: false)
-  //         .authenticate(phoneNo)
-  //         .catchError((e) {
-  //       Fluttertoast.showToast(
-  //         msg: e,
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: kprimaryColor,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0,
-  //       );
-  //     }).then((value) {
-  //       Fluttertoast.showToast(
-  //         msg: "OTP Sent Successfully !",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: kprimaryColor,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0,
-  //       );
-  //       Navigator.of(context)
-  //           .pushReplacementNamed(OtpScreen.routeName, arguments: phoneNo);
-  //     });
-  //   } else {
-  //     Fluttertoast.showToast(
-  //       msg: "Enter A Valid Number !",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.green,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //     );
-  //   }
-  // }
+  Future _sendOtp(BuildContext ctx) async {
+    final isValid = _form.currentState!.validate();
+    isLoading = true;
+    _form.currentState!.save();
+    if (isValid) {
+      await Provider.of<Auth>(ctx, listen: false)
+          .authenticate(phoneNo)
+          .catchError((e) {
+        Fluttertoast.showToast(
+          msg: e,
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }).then((value) {
+        Fluttertoast.showToast(
+          msg: "OTP Sent Successfully !",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (ctx) => OtpScreen(phoneNo: phoneNo,),),
+        );
+      });
+    } else {
+      Fluttertoast.showToast(
+        msg: "Enter A Valid Number !",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => _sendOtp(context),
                         style: ElevatedButton.styleFrom(
                             fixedSize: const Size(300, 50),
                             shape: RoundedRectangleBorder(

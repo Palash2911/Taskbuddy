@@ -54,6 +54,18 @@ class Auth extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       _token = _auth.currentUser!.uid;
       prefs.setString('UID', _auth.currentUser!.uid);
+      CollectionReference users =
+          FirebaseFirestore.instance.collection("Users");
+      await users.doc(_auth.currentUser?.uid).get().then(
+            (datasnapshot) async{
+              if (!datasnapshot.exists)
+                {
+                  await users.doc(_auth.currentUser!.uid).set({
+                    "PhoneNo": _auth.currentUser!.phoneNumber,
+                  });
+                }
+            },
+          );
       notifyListeners();
       return cred.user != null ? true : false;
     } catch (e) {
@@ -71,13 +83,9 @@ class Auth extends ChangeNotifier {
   //           (datasnapshot) => {
   //         if (!datasnapshot.exists)
   //           {user = false}
-  //         else
-  //           {
-  //             _profilePic = datasnapshot['ProfilePic'],
-  //             _uName = datasnapshot["Name"]
-  //           }
   //       },
   //     );
+  //     notifyListeners();
   //     return user;
   //   } catch (e) {
   //     rethrow;

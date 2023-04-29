@@ -1,15 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:taskbuddy/views/constants.dart';
+import 'package:taskbuddy/views/homepage.dart';
 import 'package:taskbuddy/views/login.dart';
 
 import '../providers/auth_provider.dart';
 
 class OtpScreen extends StatefulWidget {
-  static var routeName = "/otp-screen";
+  final phoneNo;
 
-  const OtpScreen({super.key});
+  const OtpScreen({super.key, required this.phoneNo});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -40,85 +42,71 @@ class _OtpScreenState extends State<OtpScreen> {
     super.dispose();
   }
 
-  // Future _sendOtp(BuildContext ctx) async {
-  //   await Provider.of<Auth>(ctx, listen: false)
-  //       .authenticate(phoneNo)
-  //       .catchError((e) {
-  //     Fluttertoast.showToast(
-  //       msg: e,
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: Colors.green,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //       gravity: ToastGravity.SNACKBAR,
-  //     );
-  //   }).then((value) {
-  //     Fluttertoast.showToast(
-  //       msg: "OTP Resent Successfully !",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: kprimaryColor,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //     );
-  //   });
-  //   Future.delayed(const Duration(seconds: 10)).then((value) {
-  //     setState(() {
-  //       resendVisible = false;
-  //     });
-  //   });
-  // }
+  Future _sendOtp(BuildContext ctx) async {
+    await Provider.of<Auth>(ctx, listen: false)
+        .authenticate(phoneNo)
+        .catchError((e) {
+      Fluttertoast.showToast(
+        msg: e,
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+        gravity: ToastGravity.SNACKBAR,
+      );
+    }).then((value) {
+      Fluttertoast.showToast(
+        msg: "OTP Resent Successfully !",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: kprimaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    });
+    Future.delayed(const Duration(seconds: 10)).then((value) {
+      setState(() {
+        resendVisible = false;
+      });
+    });
+  }
 
-  // Future _verifyOtp(BuildContext ctx) async {
-  //   var authProvider = Provider.of<Auth>(ctx, listen: false);
-  //   if (otp.length == 6) {
-  //     isValid = await authProvider.verifyOtp(otp).catchError((e) {
-  //       Fluttertoast.showToast(
-  //         msg: "Something Went Wrong !",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: kprimaryColor,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0,
-  //       );
-  //     });
-  //     if (isValid) {
-  //       var user = await authProvider.checkUser();
-  //       if (authProvider.isUser.toString().isEmpty) {
-  //         Navigator.of(ctx).pushReplacementNamed(Choose.routeName);
-  //       } else if (authProvider.isUser.toString() == "Individual") {
-  //         if (authProvider.isProfile) {
-  //           Navigator.of(ctx).pushReplacementNamed(UserBottomBar.routeName);
-  //         } else {
-  //           Navigator.of(ctx).pushReplacementNamed(UserRegister.routeName);
-  //         }
-  //       } else {
-  //         if (authProvider.isProfile) {
-  //           Navigator.of(ctx).pushReplacementNamed(NgoBottomBar.routeName);
-  //         } else {
-  //           Navigator.of(ctx).pushReplacementNamed(NgoRegister.routeName);
-  //         }
-  //       }
-  //     } else {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     }
-  //   } else {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //     Fluttertoast.showToast(
-  //       msg: "Invalid OTP. Please try again",
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       timeInSecForIosWeb: 1,
-  //       backgroundColor: kprimaryColor,
-  //       textColor: Colors.white,
-  //       fontSize: 16.0,
-  //     );
-  //   }
-  // }
+  Future _verifyOtp(BuildContext ctx) async {
+    var authProvider = Provider.of<Auth>(ctx, listen: false);
+    if (otp.length == 6) {
+      isValid = await authProvider.verifyOtp(otp).catchError((e) {
+        Fluttertoast.showToast(
+          msg: "Something Went Wrong !",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      });
+      if (isValid) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (ctx) => HomePage(),));
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(
+        msg: "Invalid OTP. Please try again",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: kprimaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +143,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 153,
                         height: 153,
                       ),
@@ -205,7 +193,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  // _verifyOtp(context);
+                                  _verifyOtp(context);
                                 },
                                 style: ButtonStyle(
                                   foregroundColor:
@@ -248,7 +236,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               onTap: resendVisible
                                   ? null
                                   : () {
-                                      // _sendOtp(context);
+                                      _sendOtp(context);
                                       setState(() {
                                         resendVisible = true;
                                       });
