@@ -39,7 +39,7 @@ class _TaskTileState extends State<TaskTile> {
           children: [
             TaskPriority(priority: eTaskPriority.low),
             SizedBox(width: 8.0),
-            Text(task.title),
+            Flexible(child: Text(task.title)),
           ],
         ),
         subtitle: Text(task.dueDate),
