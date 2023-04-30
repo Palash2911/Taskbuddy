@@ -1,42 +1,26 @@
-// class Task {
-//   final String taskId;
-//   final String desc;
-//   final String duedate;
-//   final List<dynamic> assigne;
+class Tasks {
+  String id;
+  final String dueDate;
+  final String title;
+  final String desc;
+  final List<String> assignees;
+  final bool isCompleted;
 
-//   Task({
-//     required this.desc,
-//     required this.duedate,
-//     required this.assigne,
-//     required this.taskId,
-//   });
-// }
-
-class Task {
-  String dueDate;
-  String title;
-  String desc;
-  List<String> assignees;
-  List<String> assigneeProfilePictures;
-  bool isCompleted;
-
-  Task({
+  Tasks({
+    required this.id,
     required this.dueDate,
     required this.title,
     required this.desc,
     required this.assignees,
-    required this.assigneeProfilePictures,
-    this.isCompleted = false,
+    required this.isCompleted,
   });
 }
 
-Task task = Task(
+Tasks task = Tasks(
+  id: "12",
   dueDate: "2023-05-01",
   title: "Complete this task right now",
   desc: "Lorem ipsum dolor sit amet",
   assignees: ["Dip", "Palash"],
-  assigneeProfilePictures: [
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/1200px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/1200px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
-  ],
+  isCompleted: false,
 );
