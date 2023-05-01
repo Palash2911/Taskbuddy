@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 Color kprimaryColor = Color(0xfff1BB273);
 Color ksecondaryColor = Color(0xfffE3F0E2);
 Color? kHighColor = Colors.red[200];
-Color? kLowColor = Colors.green[200];
+Color? kLowColor = Colors.blue[200];
 Color? kMidColor = Colors.yellow[200];
 
 TextStyle kTextPopB24 =

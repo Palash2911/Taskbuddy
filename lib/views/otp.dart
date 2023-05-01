@@ -50,7 +50,7 @@ class _OtpScreenState extends State<OtpScreen> {
         msg: e,
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         textColor: Colors.white,
         fontSize: 16.0,
         gravity: ToastGravity.SNACKBAR,
@@ -86,8 +86,9 @@ class _OtpScreenState extends State<OtpScreen> {
         );
       });
       if (isValid) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (ctx) => HomePage(),));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (ctx) => HomePage(),
+        ));
       } else {
         setState(() {
           isLoading = false;

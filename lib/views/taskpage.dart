@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -135,6 +136,8 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
     final taskList = provider.tasks;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
@@ -153,43 +156,85 @@ class _TaskPageState extends State<TaskPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text('Add People'),
+                    scrollable: true,
+                    title: const Text(
+                      'Add People',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                    ),
                     content: isLoading
                         ? const Center(
                             child: CircularProgressIndicator(),
                           )
-                        : Form(
-                            key: _formKey,
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    controller: _nameController,
-                                    decoration: const InputDecoration(
-                                        hintText: 'Elon Musk'),
-                                    keyboardType: TextInputType.emailAddress,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Enter a Name';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  TextFormField(
-                                    controller: _phoneController,
-                                    decoration: const InputDecoration(
-                                        hintText: '+911234567890'),
-                                    keyboardType: TextInputType.emailAddress,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please Enter a Number';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ],
+                        : SizedBox(
+                            height: height * 0.35,
+                            width: width,
+                            child: Form(
+                              key: _formKey,
+                              child: SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      controller: _nameController,
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 20,
+                                        ),
+                                        hintText: 'Elon Musk',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 14),
+                                        icon: const Icon(
+                                          CupertinoIcons.person,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please Enter a Name';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 10.0,
+                                    ),
+                                    TextFormField(
+                                      controller: _phoneController,
+                                      decoration: InputDecoration(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 20,
+                                        ),
+                                        hintText: '+91 98XXXXXXXX',
+                                        hintStyle:
+                                            const TextStyle(fontSize: 14),
+                                        icon: const Icon(
+                                          CupertinoIcons.phone,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please Enter a Number';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -219,7 +264,6 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButton: FittedBox(
         child: FloatingActionButton.extended(
           onPressed: () {
-            
             showDialog(
                 context: context, builder: (context) => AddTaskAlertDialog());
 

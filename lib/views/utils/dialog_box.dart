@@ -81,209 +81,211 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
         style: TextStyle(fontSize: 16, color: Colors.blue),
       ),
       content: SizedBox(
-        height: height * 0.40,
+        height: height * 0.50,
         width: width,
-        child: Form(
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                style: const TextStyle(fontSize: 14),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  hintText: 'Task',
-                  hintStyle: const TextStyle(fontSize: 14),
-                  icon: const Icon(
-                    CupertinoIcons.square_list,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                style: const TextStyle(fontSize: 14),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  hintText: 'Description',
-                  hintStyle: const TextStyle(fontSize: 14),
-                  icon: const Icon(
-                    CupertinoIcons.bubble_left_bubble_right,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  controller: _dateController,
+        child: SingleChildScrollView(
+          child: Form(
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  style:  TextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 20,
                     ),
-                    hintText: 'Due Date',
+                    hintText: 'Task',
                     hintStyle: const TextStyle(fontSize: 14),
                     icon: const Icon(
-                      CupertinoIcons.calendar,
+                      CupertinoIcons.square_list,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Date Not Set !';
-                    }
-                    return null;
-                  },
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1950),
-                        lastDate: DateTime(2024));
-                    if (pickedDate != null) {
-                      String formattedDate =
-                          DateFormat.yMMMMd('en_US').format(pickedDate);
-                      setState(() {
-                        _dateController.text = formattedDate;
-                      });
-                    } else {}
-                  },
                 ),
-              ),
-              const SizedBox(height: 10),
-
-              // Row(
-              //   children: <Widget>[
-              //     Icon(
-              //       CupertinoIcons.person_2,
-              //     ),
-              //     SizedBox(width: 15.0),
-              //     Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: Container(
-              //         padding: const EdgeInsets.all(10),
-              //         height: 50.0,
-              //         decoration: kInputBox,
-              //         child: DropdownButton<String>(
-              //           underline: SizedBox(),
-              //           hint: const Text('Priority'),
-              //           // value: selectedAssigne,
-              //           items: assigne.map((category) {
-              //             return DropdownMenuItem<String>(
-              //               value: category,
-              //               child: Text(category),
-              //             );
-              //           }).toList(),
-              //           onChanged: (newValue) {
-              //             setState(() {
-              //               selectedAssigne = newValue!;
-              //             });
-              //           },
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    CupertinoIcons.timer,
-                  ),
-                  SizedBox(width: 15.0),
-                  SizedBox(
-                    height: 50,
-                    width: 200,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: type.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                type.forEach(
-                                    (types) => types.isSelected = false);
-                                type[index].isSelected = true;
-                                ngoType = type[index].name;
-                              });
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                right: 9,
-                              ),
-                              child: RawChip(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                label: Text(
-                                  type[index].name,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      color: !type[index].isSelected
-                                          ? Colors.blue
-                                          : Colors.white),
-                                ),
-                                backgroundColor: !type[index].isSelected
-                                    ? Colors.white
-                                    : Colors.blue,
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Icon(
-                    CupertinoIcons.person_2,
-                  ),
-                  SizedBox(width: 15.0),
-                  Flexible(
-                    child: Container(
-                      decoration: kInputBox,
-                      padding: EdgeInsets.all(2.0),
-                      child: MultiSelectFormField(
-                        
-                        hintWidget: SizedBox(),
-                        autovalidate: AutovalidateMode.disabled,
-                        title: Text('Assigne'),
-                        dataSource: options.map((String option) {
-                          return {'display': option, 'value': option};
-                        }).toList(),
-                        textField: 'display',
-                        valueField: 'value',
-                        okButtonLabel: 'OK',
-                        cancelButtonLabel: 'CANCEL',
-                        initialValue: selectedOptions,
-                        onSaved: (value) {
-                          if (value == null) return;
-                          setState(() {
-                            selectedOptions = List<String>.from(value);
-                          });
-                        },
-                      ),
+                const SizedBox(height: 15),
+                TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  style: const TextStyle(fontSize: 14),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 20,
+                    ),
+                    hintText: 'Description',
+                    hintStyle: const TextStyle(fontSize: 14),
+                    icon: const Icon(
+                      CupertinoIcons.bubble_left_bubble_right,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 20,
+                      ),
+                      hintText: 'Due Date',
+                      hintStyle: const TextStyle(fontSize: 14),
+                      icon: const Icon(
+                        CupertinoIcons.calendar,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Date Not Set !';
+                      }
+                      return null;
+                    },
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(1950),
+                          lastDate: DateTime(2024));
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormat.yMMMMd('en_US').format(pickedDate);
+                        setState(() {
+                          _dateController.text = formattedDate;
+                        });
+                      } else {}
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+        
+                // Row(
+                //   children: <Widget>[
+                //     Icon(
+                //       CupertinoIcons.person_2,
+                //     ),
+                //     SizedBox(width: 15.0),
+                //     Padding(
+                //       padding: const EdgeInsets.all(8.0),
+                //       child: Container(
+                //         padding: const EdgeInsets.all(10),
+                //         height: 50.0,
+                //         decoration: kInputBox,
+                //         child: DropdownButton<String>(
+                //           underline: SizedBox(),
+                //           hint: const Text('Priority'),
+                //           // value: selectedAssigne,
+                //           items: assigne.map((category) {
+                //             return DropdownMenuItem<String>(
+                //               value: category,
+                //               child: Text(category),
+                //             );
+                //           }).toList(),
+                //           onChanged: (newValue) {
+                //             setState(() {
+                //               selectedAssigne = newValue!;
+                //             });
+                //           },
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      CupertinoIcons.timer,
+                    ),
+                    SizedBox(width: 15.0),
+                    SizedBox(
+                      height: 50,
+                      width: 200,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: type.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  type.forEach(
+                                      (types) => types.isSelected = false);
+                                  type[index].isSelected = true;
+                                  ngoType = type[index].name;
+                                });
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                  right: 9,
+                                ),
+                                child: RawChip(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  label: Text(
+                                    type[index].name,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: !type[index].isSelected
+                                            ? Colors.blue
+                                            : Colors.white),
+                                  ),
+                                  backgroundColor: !type[index].isSelected
+                                      ? Colors.white
+                                      : Colors.blue,
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      CupertinoIcons.person_2,
+                    ),
+                    SizedBox(width: 15.0),
+                    Flexible(
+                      child: Container(
+                        decoration: kInputBox,
+                        padding: EdgeInsets.all(2.0),
+                        child: MultiSelectFormField(
+                          
+                          hintWidget: SizedBox(),
+                          autovalidate: AutovalidateMode.disabled,
+                          title: Text('Assigne'),
+                          dataSource: options.map((String option) {
+                            return {'display': option, 'value': option};
+                          }).toList(),
+                          textField: 'display',
+                          valueField: 'value',
+                          okButtonLabel: 'OK',
+                          cancelButtonLabel: 'CANCEL',
+                          initialValue: selectedOptions,
+                          onSaved: (value) {
+                            if (value == null) return;
+                            setState(() {
+                              selectedOptions = List<String>.from(value);
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
