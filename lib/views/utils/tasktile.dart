@@ -48,28 +48,29 @@ class _TaskTileState extends State<TaskTile> {
             final isDone = provider.toggleTodoStatus(widget.task);
           },
         ),
-        title: Row(
-          children: [
-            TaskPriority(priority: eTaskPriority.low),
-            const SizedBox(width: 8.0),
-            Flexible(child: Text(widget.task.title)),
-          ],
-        ),
+        title: Flexible(child: Text(widget.task.title)),
         subtitle: Text(widget.task.dueDate),
         trailing: SizedBox(
           width: 150,
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.task.assignees.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Chip(
-                  label: Text(widget.task.assignees[index]),
+          child: Row(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.task.assignees.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Chip(
+                        label: Text(widget.task.assignees[index]),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+              TaskPriority(priority: eTaskPriority.low),
+            ],
           ),
         ),
       ),

@@ -32,20 +32,6 @@ class _HistoryPageState extends State<HistoryPage> {
       drawer: const Drawer(
         child: cAppDrawer(),
       ),
-      floatingActionButton: FittedBox(
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            _showAddTaskDialog(context);
-          },
-          icon: const Icon(
-            Icons.add,
-            size: 30,
-          ),
-          label: const Text(
-            "Add Task",
-          ),
-        ),
-      ),
       body: Column(
         children: [
           taskList.isEmpty
@@ -79,12 +65,5 @@ class _HistoryPageState extends State<HistoryPage> {
   final titleController = TextEditingController();
   final descController = TextEditingController();
 
-  void _showAddTaskDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return DialogBox();
-      },
-    );
-  }
+  
 }

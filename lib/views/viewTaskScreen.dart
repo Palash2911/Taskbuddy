@@ -38,40 +38,35 @@ class _ViewTaskState extends State<ViewTask> {
                       style: kTextPopM16,
                     ),
                     const SizedBox(height: 12.0),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.calendar_today),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Due Date',
-                                style: kTextPopB14,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const SizedBox(width: 2),
-                              Text(
-                                widget.task.dueDate,
-                                style: kTextPopB14,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    const SizedBox(height: 16),
                     Text(widget.task.desc, style: kTextPopR16),
                     const SizedBox(width: 12.0),
                     const Divider(),
                     Column(
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Due Date',
+                                  style: kTextPopB14,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const SizedBox(width: 2),
+                                Text(
+                                  widget.task.dueDate,
+                                  style: kTextPopR14,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                         const SizedBox(height: 5),
                         Row(
                           children: [
@@ -87,22 +82,21 @@ class _ViewTaskState extends State<ViewTask> {
                               child: CircleAvatar()),
                           title: Text(
                             widget.task.assignees.toString(),
-                            style: kTextPopM16,
+                            style: kTextPopR14,
                           ),
                         ),
-                        ListTile(
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: CircleAvatar()),
-                          title: Text(
-                            widget.task.assignees.toString(),
-                            style: kTextPopM16,
-                          ),
-                        ),
-                        const Divider(),
-                        TaskPriority(priority: eTaskPriority.high)
                       ],
                     ),
+                    const SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton(
+                            onPressed: () {}, child: Text("Edit Task")),
+                        ElevatedButton(
+                            onPressed: () {}, child: Text("Mark as Complete")),
+                      ],
+                    )
                   ],
                 ),
               ),

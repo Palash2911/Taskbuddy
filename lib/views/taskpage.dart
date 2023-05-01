@@ -167,7 +167,7 @@ class _TaskPageState extends State<TaskPage> {
                                   TextFormField(
                                     controller: _nameController,
                                     decoration: const InputDecoration(
-                                        hintText: 'John Delta'),
+                                        hintText: 'Your Name'),
                                     keyboardType: TextInputType.emailAddress,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -218,14 +218,14 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButton: FittedBox(
         child: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreateTaskScreen(
-                  assignee: assigne,
-                ),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => CreateTaskScreen(
+            //       assignee: assigne,
+            //     ),
+            //   ),
+            // );
           },
           icon: const Icon(
             Icons.add,
@@ -238,50 +238,41 @@ class _TaskPageState extends State<TaskPage> {
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            width: double.infinity,
-            height: 50.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: DropdownButton<String>(
-              hint: const Text('Select Task Assignee'),
-              value: selectedAssigne,
-              items: assigne.map((category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedAssigne = newValue!;
-                });
-              },
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              width: double.infinity,
+              height: 50.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.blue.withOpacity(0.5),
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Center(
+                child: DropdownButton<String>(
+                  underline: SizedBox(),
+                  hint: const Text('Select Task Assignee'),
+                  value: selectedAssigne,
+                  items: assigne.map((category) {
+                    return DropdownMenuItem<String>(
+                      value: category,
+                      child: Text(category),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedAssigne = newValue!;
+                    });
+                  },
+                ),
+              ),
             ),
           ),
-          taskList.isEmpty
-              ? const Center(
-                  child: Text(
-                    "No Current Task Created ",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                )
-              : Container(
-                  width: double.infinity,
-                  height: 400,
-                  child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    separatorBuilder: (context, index) => Container(height: 8),
-                    itemCount: taskList.length,
-                    itemBuilder: (context, index) {
-                      final task = taskList[index];
-                      return TaskTile(task: task);
-                    },
-                  ),
-                ),
         ],
       ),
     );
