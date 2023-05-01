@@ -27,7 +27,6 @@ class TaskTile extends StatefulWidget {
 }
 
 class _TaskTileState extends State<TaskTile> {
-
   bool isCompleted = true;
 
   @override
@@ -60,28 +59,29 @@ class _TaskTileState extends State<TaskTile> {
             });
           },
         ),
-        title: Row(
-          children: [
-            TaskPriority(priority: eTaskPriority.low),
-            const SizedBox(width: 8.0),
-            Flexible(child: Text(widget.title)),
-          ],
-        ),
+        title: Flexible(child: Text(widget.title)),
         subtitle: Text(widget.dueDate),
         trailing: SizedBox(
           width: 150,
-          child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: widget.assigneeName.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Chip(
-                  label: Text(widget.assigneeName[index]),
+          child: Row(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.assigneeName.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Chip(
+                        label: Text(widget.assigneeName[index]),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+              TaskPriority(priority: eTaskPriority.low),
+            ],
           ),
         ),
       ),

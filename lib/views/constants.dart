@@ -21,3 +21,12 @@ TextStyle kTextPopB14 =
     GoogleFonts.poppins(fontSize: 14.0, fontWeight: FontWeight.bold);
 TextStyle kTextPopR12 =
     GoogleFonts.poppins(fontSize: 12.0, fontWeight: FontWeight.w400);
+
+Decoration kInputBox = BoxDecoration(
+  color: Colors.white,
+  border: Border.all(
+    color: Colors.blue.withOpacity(0.5),
+    width: 1.0,
+  ),
+  borderRadius: BorderRadius.circular(8.0),
+);

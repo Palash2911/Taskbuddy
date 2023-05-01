@@ -91,7 +91,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         fontSize: 16.0,
       );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (ctx) => const TaskPage()),
+        MaterialPageRoute(builder: (ctx) => const BottomAppBar()),
       );
     });
   }
