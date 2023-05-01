@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:taskbuddy/views/Login.dart';
+import 'package:taskbuddy/views/splashScreen.dart';
+
+import '../../providers/auth_provider.dart';
 
 class cAppDrawer extends StatelessWidget {
   const cAppDrawer({
@@ -38,7 +43,10 @@ class cAppDrawer extends StatelessWidget {
           leading: const Icon(Icons.logout),
           title: const Text('LogOut'),
           onTap: () {
-            Navigator.pop(context);
+            Provider.of<Auth>(context, listen: false).signOut().then((value) {
+              Navigator.of(context, rootNavigator: true)
+                  .pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+            });
           },
         ),
       ],

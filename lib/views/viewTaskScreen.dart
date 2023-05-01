@@ -99,12 +99,10 @@ class _ViewTaskState extends State<ViewTask> {
                             style: kTextPopM16,
                           ),
                         ),
-                        Divider(),
+                        const Divider(),
                         TaskPriority(priority: eTaskPriority.high)
                       ],
                     ),
-                    const SizedBox(height: 10.0),
-                    Center(child: ElevatedButton(onPressed: (){}, child: Text("Mark as Complete")))
                   ],
                 ),
               ),
