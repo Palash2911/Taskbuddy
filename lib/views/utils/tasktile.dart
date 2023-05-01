@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:taskbuddy/views/homepage.dart';
 import 'package:taskbuddy/views/utils/taskPriority.dart';
 import 'package:taskbuddy/views/viewTaskScreen.dart';
 
@@ -11,6 +10,7 @@ class TaskTile extends StatefulWidget {
   final String title;
   final String desc;
   final String id;
+  final bool isCompleted;
 
   const TaskTile({
     super.key,
@@ -19,6 +19,7 @@ class TaskTile extends StatefulWidget {
     required this.title,
     required this.desc,
     required this.id,
+    required this.isCompleted,
   });
 
   @override
@@ -26,6 +27,15 @@ class TaskTile extends StatefulWidget {
 }
 
 class _TaskTileState extends State<TaskTile> {
+
+  bool isCompleted = true;
+
+  @override
+  void didChangeDependencies() {
+    isCompleted = widget.isCompleted;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -43,32 +53,32 @@ class _TaskTileState extends State<TaskTile> {
       },
       child: ListTile(
         leading: Checkbox(
-          value: task.isCompleted,
+          value: isCompleted,
           onChanged: (bool? value) {
             setState(() {
-              task.isCompleted = value!;
+              isCompleted = value!;
             });
           },
         ),
         title: Row(
           children: [
             TaskPriority(priority: eTaskPriority.low),
-            SizedBox(width: 8.0),
-            Flexible(child: Text(task.title)),
+            const SizedBox(width: 8.0),
+            Flexible(child: Text(widget.title)),
           ],
         ),
-        subtitle: Text(task.dueDate),
+        subtitle: Text(widget.dueDate),
         trailing: SizedBox(
           width: 150,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
-            itemCount: task.assignees.length,
+            itemCount: widget.assigneeName.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Chip(
-                  label: Text(task.assignees[index]),
+                  label: Text(widget.assigneeName[index]),
                 ),
               );
             },
