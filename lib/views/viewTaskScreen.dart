@@ -4,18 +4,10 @@ import 'package:taskbuddy/views/constants.dart';
 import 'package:taskbuddy/views/utils/taskPriority.dart';
 
 class ViewTask extends StatefulWidget {
-  final String assignename;
-  final String dueDate;
-  final String title;
-  final String desc;
   final Tasks task;
 
   const ViewTask({
     super.key,
-    required this.assignename,
-    required this.dueDate,
-    required this.title,
-    required this.desc,
     required this.task,
   });
 
@@ -42,11 +34,11 @@ class _ViewTaskState extends State<ViewTask> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.title,
+                      widget.task.title,
                       style: kTextPopM16,
                     ),
                     const SizedBox(height: 12.0),
-                    Text(widget.desc, style: kTextPopR16),
+                    Text(widget.task.desc, style: kTextPopR16),
                     const SizedBox(width: 12.0),
                     const Divider(),
                     Column(
@@ -68,7 +60,7 @@ class _ViewTaskState extends State<ViewTask> {
                               children: [
                                 const SizedBox(width: 2),
                                 Text(
-                                  widget.dueDate,
+                                  widget.task.dueDate,
                                   style: kTextPopR14,
                                 ),
                               ],
@@ -89,7 +81,7 @@ class _ViewTaskState extends State<ViewTask> {
                               borderRadius: BorderRadius.circular(10.0),
                               child: CircleAvatar()),
                           title: Text(
-                            widget.assignename,
+                            widget.task.assignees.toString(),
                             style: kTextPopR14,
                           ),
                         ),

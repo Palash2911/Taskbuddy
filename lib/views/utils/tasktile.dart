@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/utils/taskPriority.dart';
 import 'package:taskbuddy/views/viewTaskScreen.dart';
 
 import '../../models/task.dart';
 
 class TaskTile extends StatefulWidget {
-  final List<dynamic> assigneeName;
-  final String dueDate;
-  final String title;
-  final String desc;
-  final String id;
-  final bool isCompleted;
+  final Tasks task;
 
   const TaskTile({
     super.key,
-    required this.assigneeName,
-    required this.dueDate,
-    required this.title,
-    required this.desc,
-    required this.id,
-    required this.isCompleted,
+    required this.task,
   });
 
   @override
@@ -31,7 +23,7 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   void didChangeDependencies() {
-    isCompleted = widget.isCompleted;
+    isCompleted = widget.task.isCompleted;
     super.didChangeDependencies();
   }
 
@@ -43,24 +35,21 @@ class _TaskTileState extends State<TaskTile> {
             context,
             MaterialPageRoute(
               builder: (context) => ViewTask(
-                  assignename: 'assignename',
-                  dueDate: 'dueDate',
-                  title: 'title',
-                  desc: 'desc',
-                  task: task),
+                task: widget.task,
+              ),
             ));
       },
       child: ListTile(
         leading: Checkbox(
           value: isCompleted,
           onChanged: (bool? value) {
-            setState(() {
-              isCompleted = value!;
-            });
+            final provider =
+            Provider.of<TaskProvider>(context, listen: false);
+            final isDone = provider.toggleTodoStatus(widget.task);
           },
         ),
-        title: Flexible(child: Text(widget.title)),
-        subtitle: Text(widget.dueDate),
+        title: Flexible(child: Text(widget.task.title)),
+        subtitle: Text(widget.task.dueDate),
         trailing: SizedBox(
           width: 150,
           child: Row(
@@ -69,12 +58,12 @@ class _TaskTileState extends State<TaskTile> {
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: widget.assigneeName.length,
+                  itemCount: widget.task.assignees.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Chip(
-                        label: Text(widget.assigneeName[index]),
+                        label: Text(widget.task.assignees[index]),
                       ),
                     );
                   },

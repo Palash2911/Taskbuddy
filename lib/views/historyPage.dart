@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/views/utils/AppDrawer.dart';
 import 'package:taskbuddy/views/utils/bottombar.dart';
 import 'package:taskbuddy/views/utils/dialog_box.dart';
 import 'package:taskbuddy/views/utils/tasktile.dart';
+
+import '../providers/task_provider.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -15,31 +18,43 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TaskProvider>(context);
+    final taskList = provider.tasksCompleted;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Task Buddy',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: cAppDrawer(),
       ),
       body: Column(
         children: [
-          // ListView.builder(
-          //   itemCount: 10,
-          //   itemBuilder: (context, index) {
-          //     bool _isChecked = false;
-          //     List<String> assignees = [
-          //       "Palash",
-          //       "Dip",
-          //       "Hire",
-          //     ];
-          //     return TaskTile();
-          //   },
-          // ),
+          taskList.isEmpty
+              ? const Center(
+            child: Text(
+              "No Task Completed ",
+              style: TextStyle(fontSize: 18),
+            ),
+          )
+              : SizedBox(
+            width: double.infinity,
+            height: 500,
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              separatorBuilder: (context, index) => Container(height: 8),
+              itemCount: taskList.length,
+              itemBuilder: (context, index) {
+                final task = taskList[index];
+                return TaskTile(task: task);
+              },
+            ),
+          ),
         ],
       ),
     );
