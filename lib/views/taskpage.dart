@@ -27,6 +27,7 @@ class _TaskPageState extends State<TaskPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   List<String> assigne = [
+    "All",
     "Self",
   ];
 
