@@ -70,6 +70,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     await taskProvider
         .createTask(
       Tasks(
+        createdTime: DateTime.now().toString(),
         id: "",
         dueDate: date,
         title: taskTitle,
@@ -140,7 +141,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             }
                             return null;
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Write short task description',
                             alignLabelWithHint: true,
                             labelText: 'Task description',

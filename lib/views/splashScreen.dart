@@ -40,13 +40,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ksecondaryColor,
-      body: Center(
+      body: const Center(
         child: SizedBox(
           height: 350.0,
-          child: Image.asset(
-            'assets/images/splash.gif',
-            fit: BoxFit.contain,
-          ),
+          child: Text("HELLO"),
         ),
       ),
     );

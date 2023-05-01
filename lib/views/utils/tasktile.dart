@@ -5,21 +5,11 @@ import 'package:taskbuddy/views/viewTaskScreen.dart';
 import '../../models/task.dart';
 
 class TaskTile extends StatefulWidget {
-  final List<dynamic> assigneeName;
-  final String dueDate;
-  final String title;
-  final String desc;
-  final String id;
-  final bool isCompleted;
+  final Tasks task;
 
   const TaskTile({
     super.key,
-    required this.assigneeName,
-    required this.dueDate,
-    required this.title,
-    required this.desc,
-    required this.id,
-    required this.isCompleted,
+    required this.task,
   });
 
   @override
@@ -32,7 +22,7 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   void didChangeDependencies() {
-    isCompleted = widget.isCompleted;
+    isCompleted = widget.task.isCompleted;
     super.didChangeDependencies();
   }
 
@@ -64,21 +54,21 @@ class _TaskTileState extends State<TaskTile> {
           children: [
             TaskPriority(priority: eTaskPriority.low),
             const SizedBox(width: 8.0),
-            Flexible(child: Text(widget.title)),
+            Flexible(child: Text(widget.task.title)),
           ],
         ),
-        subtitle: Text(widget.dueDate),
+        subtitle: Text(widget.task.dueDate),
         trailing: SizedBox(
           width: 150,
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
-            itemCount: widget.assigneeName.length,
+            itemCount: widget.task.assignees.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Chip(
-                  label: Text(widget.assigneeName[index]),
+                  label: Text(widget.task.assignees[index]),
                 ),
               );
             },

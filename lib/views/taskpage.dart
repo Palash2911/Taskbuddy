@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:taskbuddy/models/assigne.dart';
 import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/providers/assignee_provider.dart';
+import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/createTaskScreen.dart';
 import 'package:taskbuddy/views/utils/AppDrawer.dart';
 import 'package:taskbuddy/views/utils/bottombar.dart';
@@ -32,8 +33,6 @@ class _TaskPageState extends State<TaskPage> {
   ];
 
   var isLoading = false;
-  var currentTask = false;
-  var load = false;
   String? selectedAssigne;
   final auth = FirebaseAuth.instance;
   var isInit = true;
@@ -49,12 +48,8 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   void didChangeDependencies() {
-    setState(() {
-      load = true;
-    });
     if (isInit) {
       getAssignee();
-      getTask();
     }
     isInit = false;
     super.didChangeDependencies();
@@ -76,28 +71,6 @@ class _TaskPageState extends State<TaskPage> {
     });
     setState(() {
       isLoading = false;
-    });
-  }
-
-  Future getTask() async {
-    Future.delayed(const Duration(seconds: 1), () async {
-      taskRef = await taskRef
-          .doc(auth.currentUser!.uid)
-          .collection("Tasks")
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        if (querySnapshot.size > 0) {
-          taskRef = FirebaseFirestore.instance
-              .collection("Users")
-              .doc(auth.currentUser!.uid)
-              .collection("Tasks");
-          setState(() {
-            currentTask = true;
-            load = false;
-          });
-        }
-        return taskRef;
-      });
     });
   }
 
@@ -159,6 +132,9 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<TaskProvider>(context);
+    final taskList = provider.tasks;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -260,74 +236,54 @@ class _TaskPageState extends State<TaskPage> {
           ),
         ),
       ),
-      body: load
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: double.infinity,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            width: double.infinity,
+            height: 50.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: DropdownButton<String>(
+              hint: const Text('Select Task Assignee'),
+              value: selectedAssigne,
+              items: assigne.map((category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedAssigne = newValue!;
+                });
+              },
+            ),
+          ),
+          taskList.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No Current Task Created ",
+                    style: TextStyle(fontSize: 18),
                   ),
-                  child: DropdownButton<String>(
-                    hint: const Text('Select Task Assignee'),
-                    value: selectedAssigne,
-                    items: assigne.map((category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedAssigne = newValue!;
-                      });
+                )
+              : Container(
+                  width: double.infinity,
+                  height: 400,
+                  child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    separatorBuilder: (context, index) => Container(height: 8),
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) {
+                      final task = taskList[index];
+                      return TaskTile(task: task);
                     },
                   ),
                 ),
-                currentTask
-                    ? Expanded(
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: taskRef.snapshots(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else {
-                              if (snapshot.data!.docs.isEmpty) {
-                                return const Center(
-                                    child: Text("No Current Task Created "));
-                              } else {
-                                return ListView(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  children: snapshot.data!.docs.map((document) {
-                                    // if(!document['isCompleted']){
-                                    //
-                                    // }
-                                    return TaskTile(
-                                      assigneeName: document["Assignee"],
-                                      dueDate: document["Due_Date"],
-                                      title: document['Task_Title'],
-                                      desc: document['Task_Desc'],
-                                      id: document.id,
-                                      isCompleted: document['IsCompleted'],
-                                    );
-                                  }).toList(),
-                                );
-                              }
-                            }
-                          },
-                        ),
-                      )
-                    : const Center(child: Text("No Current Task Created ")),
-              ],
-            ),
+        ],
+      ),
     );
   }
 }

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => AssigneeProvider(),
         ),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),

@@ -1,12 +1,18 @@
+class TaskField{
+  static const createdTime = 'CreatedTime';
+}
+
 class Tasks {
   String id;
   final String dueDate;
   final String title;
   final String desc;
-  final List<String> assignees;
+  final List<dynamic> assignees;
   bool isCompleted;
+  String createdTime;
 
   Tasks({
+    required this.createdTime,
     required this.id,
     required this.dueDate,
     required this.title,
@@ -17,6 +23,7 @@ class Tasks {
 }
 
 Tasks task = Tasks(
+  createdTime: DateTime.now().toString(),
   id: "12",
   dueDate: "2023-05-01",
   title: "Complete this task right now",
