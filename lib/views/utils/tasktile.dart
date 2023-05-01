@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/utils/taskPriority.dart';
 import 'package:taskbuddy/views/viewTaskScreen.dart';
 
@@ -17,7 +19,6 @@ class TaskTile extends StatefulWidget {
 }
 
 class _TaskTileState extends State<TaskTile> {
-
   bool isCompleted = true;
 
   @override
@@ -34,20 +35,17 @@ class _TaskTileState extends State<TaskTile> {
             context,
             MaterialPageRoute(
               builder: (context) => ViewTask(
-                  assignename: 'assignename',
-                  dueDate: 'dueDate',
-                  title: 'title',
-                  desc: 'desc',
-                  task: task),
+                task: widget.task,
+              ),
             ));
       },
       child: ListTile(
         leading: Checkbox(
           value: isCompleted,
           onChanged: (bool? value) {
-            setState(() {
-              isCompleted = value!;
-            });
+            final provider =
+            Provider.of<TaskProvider>(context, listen: false);
+            final isDone = provider.toggleTodoStatus(widget.task);
           },
         ),
         title: Row(

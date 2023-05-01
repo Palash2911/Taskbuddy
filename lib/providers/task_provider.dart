@@ -29,7 +29,7 @@ class TaskProvider extends ChangeNotifier {
 
   Future editTask(Tasks task) async {
     try {
-      var t = await db
+      await db
           .collection("Users")
           .doc(auth.currentUser!.uid)
           .collection("Tasks")
@@ -110,6 +110,7 @@ class TaskProvider extends ChangeNotifier {
 
   bool toggleTodoStatus(Tasks task) {
     task.isCompleted = !task.isCompleted;
+    print(task.isCompleted);
     editTask(task);
     return task.isCompleted;
   }
