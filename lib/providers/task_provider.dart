@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:taskbuddy/models/task.dart';
 
-class Task extends ChangeNotifier {
+class TaskProvider extends ChangeNotifier {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
 

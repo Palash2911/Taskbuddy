@@ -4,7 +4,7 @@ class Tasks {
   final String title;
   final String desc;
   final List<String> assignees;
-  final bool isCompleted;
+  bool isCompleted;
 
   Tasks({
     required this.id,

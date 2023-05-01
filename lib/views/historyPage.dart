@@ -40,17 +40,21 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          bool _isChecked = false;
-          List<String> assignees = [
-            "Palash",
-            "Dip",
-            "Hire",
-          ];
-          return TaskTile();
-        },
+      body: Column(
+        children: [
+          // ListView.builder(
+          //   itemCount: 10,
+          //   itemBuilder: (context, index) {
+          //     bool _isChecked = false;
+          //     List<String> assignees = [
+          //       "Palash",
+          //       "Dip",
+          //       "Hire",
+          //     ];
+          //     return TaskTile();
+          //   },
+          // ),
+        ],
       ),
     );
   }

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../models/assigne.dart';
 
-class Assignee extends ChangeNotifier {
+class AssigneeProvider extends ChangeNotifier {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
 

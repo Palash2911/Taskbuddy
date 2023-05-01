@@ -1,8 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:taskbuddy/models/assigne.dart';
+import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/views/createTaskScreen.dart';
 import 'package:taskbuddy/views/utils/AppDrawer.dart';
 import 'package:taskbuddy/views/utils/bottombar.dart';
 import 'package:taskbuddy/views/utils/tasktile.dart';
+
+import '../providers/auth_provider.dart';
+import 'constants.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -12,25 +21,144 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   List<String> assigne = [
-    "Dip",
-    "Palash",
+    "Self",
   ];
 
+  var isLoading = false;
+  var currentTask = false;
   String? selectedAssigne;
+  final auth = FirebaseAuth.instance;
+  var isInit = true;
+  CollectionReference? assigneeRef;
+  CollectionReference? taskRef;
+
+  @override
+  void initState() {
+    _nameController.text = "";
+    _phoneController.text = "";
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      getAssignee();
+      getTask();
+    }
+    isInit = false;
+    super.didChangeDependencies();
+  }
+
+  Future getAssignee() async {
+    assigneeRef = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(auth.currentUser!.uid)
+        .collection('Assignee')
+        .get()
+        .then((value) {
+      if (value.size > 0) {
+        value.docs.forEach((element) {
+          assigne.add(element["Name"]);
+        });
+      }
+      return null;
+    });
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future getTask() async {
+    taskRef = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(auth.currentUser!.uid)
+        .collection("Tasks")
+        .get()
+        .then((value) {
+      if (value.size > 0) {
+        taskRef = FirebaseFirestore.instance
+            .collection("Users")
+            .doc(auth.currentUser!.uid)
+            .collection("Tasks");
+        setState(() {
+          currentTask = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  Future _addAssingee(BuildContext ctx) async {
+    var authProvider = Provider.of<Auth>(ctx, listen: false);
+    var assigneProvider = Provider.of<AssigneeProvider>(ctx, listen: false);
+    final isValid = _formKey.currentState!.validate();
+    setState(() {
+      isLoading = true;
+    });
+    _formKey.currentState!.save();
+
+    if (isValid) {
+      var ai = await assigneProvider
+          .createAssigne(
+        Assigne(
+          id: "",
+          name: _nameController.text,
+          number: _phoneController.text,
+          taskId: [],
+        ),
+      )
+          .then((value) {
+        setState(() {
+          _nameController.text = "";
+          _phoneController.text = "";
+          isLoading = false;
+        });
+        Fluttertoast.showToast(
+          msg: "Assignee Added Successfully !",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      });
+    } else {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "Please Fill Details !",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Task Buddy',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.person_add_alt_1_rounded,
               color: Colors.white,
             ),
@@ -39,23 +167,55 @@ class _TaskPageState extends State<TaskPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Add People'),
-                    content: TextField(
-                      controller: _emailController,
-                      decoration:
-                          InputDecoration(hintText: 'diphire@mail.com'),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
+                    title: const Text('Add People'),
+                    content: isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Form(
+                            key: _formKey,
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    controller: _nameController,
+                                    decoration: const InputDecoration(
+                                        hintText: 'John Delta'),
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please Enter a Name';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  TextFormField(
+                                    controller: _phoneController,
+                                    decoration: const InputDecoration(
+                                        hintText: '+911234567890'),
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please Enter a Number';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                     actions: <Widget>[
                       TextButton(
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
                       ElevatedButton(
-                        child: Text('add'),
+                        child: const Text('Add'),
                         onPressed: () {
-                          final enteredEmail = _emailController.text.trim();
-                          Navigator.of(context).pop(enteredEmail);
+                          _addAssingee(context);
                         },
                       ),
                     ],
@@ -67,20 +227,22 @@ class _TaskPageState extends State<TaskPage> {
         ],
         centerTitle: true,
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: cAppDrawer(),
       ),
       floatingActionButton: FittedBox(
         child: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CreateTaskScreen()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CreateTaskScreen()));
           },
           icon: const Icon(
             Icons.add,
             size: 30,
           ),
-          label: Text(
+          label: const Text(
             "Add Task",
           ),
         ),
@@ -110,14 +272,41 @@ class _TaskPageState extends State<TaskPage> {
               },
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return TaskTile();
-              },
-            ),
-          ),
+          currentTask
+              ? Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: taskRef!.snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        if (snapshot.data!.docs.isEmpty) {
+                          const Center(child: Text("No Current Task Created "));
+                        } else {
+                          return ListView(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            children: snapshot.data!.docs.map((document) {
+                              // if(!document['isCompleted']){
+                              //
+                              // }
+                              return TaskTile(
+                                assigneeName: document["Assignee"],
+                                dueDate: document["Due_Date"],
+                                title: document['Task_Title'],
+                                desc: document['Task_Desc'],
+                                id: document.id,
+                              );
+                            }).toList(),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                )
+              : const Center(child: Text("No Current Task Created ")),
         ],
       ),
     );

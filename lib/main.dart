@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/providers/auth_provider.dart';
+import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/splashScreen.dart';
 
 void main() async {
@@ -20,12 +22,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (BuildContext context) => Auth(),
         ),
-        // ChangeNotifierProvider(
-        //   create: (BuildContext context) => UserProvider(),
-        // ),
-        // ChangeNotifierProvider(
-        //   create: (BuildContext context) => (),
-        // ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => TaskProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => AssigneeProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

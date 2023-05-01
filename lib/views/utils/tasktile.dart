@@ -6,6 +6,21 @@ import 'package:taskbuddy/views/viewTaskScreen.dart';
 import '../../models/task.dart';
 
 class TaskTile extends StatefulWidget {
+  final List<dynamic> assigneeName;
+  final String dueDate;
+  final String title;
+  final String desc;
+  final String id;
+
+  const TaskTile({
+    super.key,
+    required this.assigneeName,
+    required this.dueDate,
+    required this.title,
+    required this.desc,
+    required this.id,
+  });
+
   @override
   State<TaskTile> createState() => _TaskTileState();
 }
@@ -53,10 +68,8 @@ class _TaskTileState extends State<TaskTile> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Chip(
-                    label: Text(task.assignees[index]),
-                    avatar: CircleAvatar(
-                      child: Text(task.assigneeProfilePictures[index][0]),
-                    )),
+                  label: Text(task.assignees[index]),
+                ),
               );
             },
           ),

@@ -8,7 +8,7 @@ class ViewTask extends StatefulWidget {
   final String dueDate;
   final String title;
   final String desc;
-  final Task task;
+  final Tasks task;
 
   const ViewTask({
     super.key,
