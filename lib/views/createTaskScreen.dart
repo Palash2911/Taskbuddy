@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 import 'package:provider/provider.dart';
 import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
@@ -96,6 +97,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       );
     });
   }
+
+  final List<String> options = [
+    'Option 1',
+    'Option 2',
+    'Option 3',
+    'Option 4',
+    'Option 5'
+  ];
+  List<String> selectedOptions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +215,24 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               } else {}
                             },
                           ),
+                        ),
+                        MultiSelectFormField(
+                          autovalidate: AutovalidateMode.disabled,
+                          title: Text('Select Options'),
+                          dataSource: options.map((String option) {
+                            return {'display': option, 'value': option};
+                          }).toList(),
+                          textField: 'display',
+                          valueField: 'value',
+                          okButtonLabel: 'OK',
+                          cancelButtonLabel: 'CANCEL',
+                          initialValue: selectedOptions,
+                          onSaved: (value) {
+                            if (value == null) return;
+                            setState(() {
+                              selectedOptions = List<String>.from(value);
+                            });
+                          },
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(

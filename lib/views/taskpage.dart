@@ -10,6 +10,7 @@ import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/createTaskScreen.dart';
 import 'package:taskbuddy/views/utils/AppDrawer.dart';
 import 'package:taskbuddy/views/utils/bottombar.dart';
+import 'package:taskbuddy/views/utils/dialog_box.dart';
 import 'package:taskbuddy/views/utils/tasktile.dart';
 
 import '../providers/auth_provider.dart';
@@ -167,7 +168,7 @@ class _TaskPageState extends State<TaskPage> {
                                   TextFormField(
                                     controller: _nameController,
                                     decoration: const InputDecoration(
-                                        hintText: 'John Delta'),
+                                        hintText: 'Elon Musk'),
                                     keyboardType: TextInputType.emailAddress,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -218,14 +219,18 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButton: FittedBox(
         child: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreateTaskScreen(
-                  assignee: assigne,
-                ),
-              ),
-            );
+            
+            showDialog(
+                context: context, builder: (context) => AddTaskAlertDialog());
+
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => CreateTaskScreen(
+            //       assignee: assigne,
+            //     ),
+            //   ),
+            // );
           },
           icon: const Icon(
             Icons.add,
@@ -238,28 +243,57 @@ class _TaskPageState extends State<TaskPage> {
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            width: double.infinity,
-            height: 50.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: DropdownButton<String>(
-              hint: const Text('Select Task Assignee'),
-              value: selectedAssigne,
-              items: assigne.map((category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedAssigne = newValue!;
-                });
-              },
-            ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 50.0,
+                  decoration: kInputBox,
+                  child: DropdownButton<String>(
+                    underline: SizedBox(),
+                    hint: const Text('Assignee'),
+                    value: selectedAssigne,
+                    items: assigne.map((category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedAssigne = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 50.0,
+                  decoration: kInputBox,
+                  child: DropdownButton<String>(
+                    underline: SizedBox(),
+                    hint: const Text('Priority'),
+                    value: selectedAssigne,
+                    items: assigne.map((category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedAssigne = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
           taskList.isEmpty
               ? const Center(

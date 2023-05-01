@@ -1,170 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:taskbuddy/models/assigne.dart';
 import 'package:taskbuddy/views/constants.dart';
-
-// class DialogBox extends StatefulWidget {
-//   @override
-//   State<DialogBox> createState() => _DialogBoxState();
-// }
-
-// class _DialogBoxState extends State<DialogBox> {
-//   List<String> assigne = [
-//     "Dip",
-//     "Palash",
-//   ];
-
-//   String? selectedCategory;
-//   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//   final TextEditingController _taskTitleController = TextEditingController();
-//   final TextEditingController _descriptionController = TextEditingController();
-//   final TextEditingController _dateController = TextEditingController();
-
-//   String get driveTitle => _taskTitleController.text;
-//   String get description => _descriptionController.text;
-//   String get date => _dateController.text;
-
-//   var isLoading = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     setFields();
-//   }
-
-//   @override
-//   void dispose() {
-//     _taskTitleController.dispose();
-//     _descriptionController.dispose();
-//     _dateController.dispose();
-//     super.dispose();
-//   }
-
-//   void setFields() {
-//     _taskTitleController.text = "";
-//     _descriptionController.text = "";
-//     _dateController.text = "";
-
-//     selectedCategory = assigne.first;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AlertDialog(
-//       title: Text('Add Task'),
-//       content: Container(
-//         height: double.infinity,
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.stretch,
-//             children: [
-//               TextFormField(
-//                 textInputAction: TextInputAction.next,
-//                 controller: _taskTitleController,
-//                 validator: (value) {
-//                   if (value == null || value.isEmpty) {
-//                     return 'Please enter a Task Title';
-//                   }
-//                   return null;
-//                 },
-//                 decoration: InputDecoration(
-//                   hintText: 'Write the title of the Task',
-//                   alignLabelWithHint: true,
-//                   labelText: 'Task Title',
-//                 ),
-//               ),
-//               const SizedBox(height: 10.0),
-//               TextFormField(
-//                 textInputAction: TextInputAction.next,
-//                 minLines: 1,
-//                 maxLines: 10,
-//                 controller: _descriptionController,
-//                 validator: (value) {
-//                   if (value == null || value.isEmpty) {
-//                     return 'Please enter description';
-//                   }
-//                   return null;
-//                 },
-//                 decoration: InputDecoration(
-//                   hintText: 'Write short task description',
-//                   alignLabelWithHint: true,
-//                   labelText: 'Task description',
-//                 ),
-//               ),
-//               const SizedBox(height: 10.0),
-//               Container(
-//                 padding: const EdgeInsets.all(10),
-//                 width: double.infinity,
-//                 height: 50.0,
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(10.0),
-//                 ),
-//                 child: DropdownButton<String>(
-//                   hint: const Text('Select task assigne'),
-//                   value: selectedCategory,
-//                   items: assigne.map((category) {
-//                     return DropdownMenuItem<String>(
-//                       value: category,
-//                       child: Text(category),
-//                     );
-//                   }).toList(),
-//                   onChanged: (newValue) {
-//                     setState(() {
-//                       selectedCategory = newValue!;
-//                     });
-//                   },
-//                 ),
-//               ),
-//               const SizedBox(height: 10.0),
-//               Padding(
-//                 padding: const EdgeInsets.only(right: 10.0),
-//                 child: TextFormField(
-//                   textInputAction: TextInputAction.next,
-//                   controller: _dateController,
-//                   decoration: InputDecoration(
-//                     hintText: "Due Date",
-//                     hintStyle: kTextPopR14,
-//                     icon: const Icon(Icons.calendar_today_rounded),
-//                   ),
-//                   validator: (value) {
-//                     if (value == null || value.isEmpty) {
-//                       return 'Date Not Set !';
-//                     }
-//                     return null;
-//                   },
-//                   readOnly: true,
-//                   onTap: () async {
-//                     DateTime? pickedDate = await showDatePicker(
-//                         context: context,
-//                         initialDate: DateTime.now(),
-//                         firstDate: DateTime(1950),
-//                         lastDate: DateTime(2024));
-//                     if (pickedDate != null) {
-//                       String formattedDate =
-//                           DateFormat.yMMMMd('en_US').format(pickedDate);
-//                       setState(() {
-//                         _dateController.text = formattedDate;
-//                       });
-//                     } else {}
-//                   },
-//                 ),
-//               ),
-//               SizedBox(height: 10.0),
-//               ElevatedButton(
-//                 onPressed: () {},
-//                 child: Text(
-//                   'Add Task',
-//                   style: kTextPopB16,
-//                 ),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class AddTaskAlertDialog extends StatefulWidget {
   const AddTaskAlertDialog({super.key});
@@ -174,6 +13,62 @@ class AddTaskAlertDialog extends StatefulWidget {
 }
 
 class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
+  String? selectedCategory;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _taskTitleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _assigneeController = TextEditingController();
+
+  String get driveTitle => _taskTitleController.text;
+  String get description => _descriptionController.text;
+  String get date => _dateController.text;
+  String get assignee => _assigneeController.text;
+
+  var isLoading = false;
+  String ngoType = "";
+  List<Type> type = [
+    Type('high', false),
+    Type('low', false),
+    Type('medium', false),
+  ];
+
+  final List<String> options = [
+    'Option 1',
+    'Option 2',
+    'Option 3',
+    'Option 4',
+    'Option 5'
+  ];
+  List<String> selectedOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    setFields();
+  }
+
+  @override
+  void dispose() {
+    _taskTitleController.dispose();
+    _descriptionController.dispose();
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  void setFields() {
+    _taskTitleController.text = "";
+    _descriptionController.text = "";
+    _dateController.text = "";
+  }
+
+  List<String> assigne = [
+    "All",
+    "Self",
+  ];
+
+  String? selectedAssigne;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -183,10 +78,10 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
       title: const Text(
         'New Task',
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: Colors.brown),
+        style: TextStyle(fontSize: 16, color: Colors.blue),
       ),
       content: SizedBox(
-        height: height * 0.35,
+        height: height * 0.40,
         width: width,
         child: Form(
           child: Column(
@@ -200,8 +95,9 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                   ),
                   hintText: 'Task',
                   hintStyle: const TextStyle(fontSize: 14),
-                  icon: const Icon(CupertinoIcons.square_list,
-                      color: Colors.brown),
+                  icon: const Icon(
+                    CupertinoIcons.square_list,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -219,19 +115,172 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                   ),
                   hintText: 'Description',
                   hintStyle: const TextStyle(fontSize: 14),
-                  icon: const Icon(CupertinoIcons.bubble_left_bubble_right,
-                      color: Colors.brown),
+                  icon: const Icon(
+                    CupertinoIcons.bubble_left_bubble_right,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
               ),
               const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  controller: _dateController,
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 20,
+                    ),
+                    hintText: 'Due Date',
+                    hintStyle: const TextStyle(fontSize: 14),
+                    icon: const Icon(
+                      CupertinoIcons.calendar,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Date Not Set !';
+                    }
+                    return null;
+                  },
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime(2024));
+                    if (pickedDate != null) {
+                      String formattedDate =
+                          DateFormat.yMMMMd('en_US').format(pickedDate);
+                      setState(() {
+                        _dateController.text = formattedDate;
+                      });
+                    } else {}
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Row(
+              //   children: <Widget>[
+              //     Icon(
+              //       CupertinoIcons.person_2,
+              //     ),
+              //     SizedBox(width: 15.0),
+              //     Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: Container(
+              //         padding: const EdgeInsets.all(10),
+              //         height: 50.0,
+              //         decoration: kInputBox,
+              //         child: DropdownButton<String>(
+              //           underline: SizedBox(),
+              //           hint: const Text('Priority'),
+              //           // value: selectedAssigne,
+              //           items: assigne.map((category) {
+              //             return DropdownMenuItem<String>(
+              //               value: category,
+              //               child: Text(category),
+              //             );
+              //           }).toList(),
+              //           onChanged: (newValue) {
+              //             setState(() {
+              //               selectedAssigne = newValue!;
+              //             });
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               Row(
-                children: const <Widget>[
-                  Icon(CupertinoIcons.tag, color: Colors.brown),
+                children: <Widget>[
+                  Icon(
+                    CupertinoIcons.timer,
+                  ),
                   SizedBox(width: 15.0),
-                
+                  SizedBox(
+                    height: 50,
+                    width: 200,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: type.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                type.forEach(
+                                    (types) => types.isSelected = false);
+                                type[index].isSelected = true;
+                                ngoType = type[index].name;
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                right: 9,
+                              ),
+                              child: RawChip(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                label: Text(
+                                  type[index].name,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: !type[index].isSelected
+                                          ? Colors.blue
+                                          : Colors.white),
+                                ),
+                                backgroundColor: !type[index].isSelected
+                                    ? Colors.white
+                                    : Colors.blue,
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    CupertinoIcons.person_2,
+                  ),
+                  SizedBox(width: 15.0),
+                  Flexible(
+                    child: Container(
+                      decoration: kInputBox,
+                      padding: EdgeInsets.all(2.0),
+                      child: MultiSelectFormField(
+                        
+                        hintWidget: SizedBox(),
+                        autovalidate: AutovalidateMode.disabled,
+                        title: Text('Assigne'),
+                        dataSource: options.map((String option) {
+                          return {'display': option, 'value': option};
+                        }).toList(),
+                        textField: 'display',
+                        valueField: 'value',
+                        okButtonLabel: 'OK',
+                        cancelButtonLabel: 'CANCEL',
+                        initialValue: selectedOptions,
+                        onSaved: (value) {
+                          if (value == null) return;
+                          setState(() {
+                            selectedOptions = List<String>.from(value);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -253,4 +302,11 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
       ],
     );
   }
+}
+
+class Type {
+  String name;
+  bool isSelected;
+
+  Type(this.name, this.isSelected);
 }
