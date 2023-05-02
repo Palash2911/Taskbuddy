@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: SizedBox(
                 height: 200.0,
                 child: Image.asset(
-                  'assets/images/loading.gif',
+                   'assets/logo.png',
                   fit: BoxFit.contain,
                 ),
               ),
@@ -105,15 +105,22 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 40,
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 50,
+                                  SizedBox(height: 40.0,),
+                                  Center(
+                                    child: SizedBox(
+                                      height: 150.0,
+                                      child: Image.asset(
+                                        'assets/logo.png',
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
                                   ),
-                                  Text('Login', style: kTextPopB24),
+                                  SizedBox(
+                                    height: 10.0,
+                                  ),
+                                  Text('Login',
+                                      style: kTextPopB24.copyWith(
+                                          color: Colors.white)),
                                 ],
                               ),
                             ),

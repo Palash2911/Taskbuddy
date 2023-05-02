@@ -118,7 +118,7 @@ class _OtpScreenState extends State<OtpScreen> {
               child: SizedBox(
                 height: 200.0,
                 child: Image.asset(
-                  'assets/images/loading.gif',
+                  'assets/logo.png',
                   fit: BoxFit.contain,
                 ),
               ),
