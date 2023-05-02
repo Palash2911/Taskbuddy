@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/providers/auth_provider.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
+import 'package:taskbuddy/views/historyPage.dart';
 import 'package:taskbuddy/views/splashScreen.dart';
 
 void main() async {
