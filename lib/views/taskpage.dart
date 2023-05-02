@@ -31,8 +31,16 @@ class _TaskPageState extends State<TaskPage> {
     "Self",
   ];
 
+  List<String> Priority = [
+    "All Priority",
+    "High",
+    "Medium",
+    "Low",
+  ];
+
   var isLoading = false;
   String? selectedAssigne;
+  String? selectedPriority;
   final auth = FirebaseAuth.instance;
   var isInit = true;
   CollectionReference? assigneeRef;
@@ -132,7 +140,30 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
-    final taskList = provider.tasks;
+    var taskList = provider.tasksFilter(3, "All");
+    if(selectedAssigne == null)
+      {
+        if (selectedPriority == "High") {
+          taskList = provider.tasksFilter(0, "All");
+        } else if (selectedPriority == "Medium") {
+          taskList = provider.tasksFilter(1, "All");
+        } else if(selectedPriority == "Low") {
+          taskList = provider.tasksFilter(2, "All");
+        } else {
+          taskList = provider.tasksFilter(3, "All");
+        }
+      }
+    else{
+      if (selectedPriority == "High") {
+        taskList = provider.tasksFilter(0, selectedAssigne!);
+      } else if (selectedPriority == "Medium") {
+        taskList = provider.tasksFilter(1, selectedAssigne!);
+      } else if(selectedPriority == "Low") {
+        taskList = provider.tasksFilter(2, selectedAssigne!);
+      } else {
+        taskList = provider.tasksFilter(3, selectedAssigne!);
+      }
+    }
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
@@ -193,7 +224,8 @@ class _TaskPageState extends State<TaskPage> {
                                                 BorderRadius.circular(15),
                                           ),
                                         ),
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return 'Please Enter a Name';
@@ -223,7 +255,8 @@ class _TaskPageState extends State<TaskPage> {
                                                 BorderRadius.circular(15),
                                           ),
                                         ),
-                                        keyboardType: TextInputType.emailAddress,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return 'Please Enter a Number';
@@ -263,7 +296,10 @@ class _TaskPageState extends State<TaskPage> {
           child: FloatingActionButton.extended(
             onPressed: () {
               showDialog(
-                  context: context, builder: (context) => AddTaskAlertDialog());
+                  context: context,
+                  builder: (context) => AddTaskAlertDialog(
+                        assignee: assigne,
+                      ));
             },
             icon: const Icon(
               Icons.add,
@@ -274,85 +310,89 @@ class _TaskPageState extends State<TaskPage> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 50.0,
-                    decoration: kInputBox,
-                    child: DropdownButton<String>(
-                      underline: SizedBox(),
-                      hint: const Text('Assignee'),
-                      value: selectedAssigne,
-                      items: assigne.map((category) {
-                        return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedAssigne = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 50.0,
-                    decoration: kInputBox,
-                    child: DropdownButton<String>(
-                      underline: const SizedBox(),
-                      hint: const Text('Priority'),
-                      value: selectedAssigne,
-                      items: assigne.map((category) {
-                        return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedAssigne = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            taskList.isEmpty
-                ? const Padding(
-                  padding:  EdgeInsets.only(top: 50.0),
-                  child: Center(
-                      child: Text(
-                        "No Current Task Created !",
-                        style: TextStyle(fontSize: 25),
+        body: RefreshIndicator(
+          onRefresh: getAssignee,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 50.0,
+                      decoration: kInputBox,
+                      child: DropdownButton<String>(
+                        underline: SizedBox(),
+                        hint: const Text("All"),
+                        value: selectedAssigne,
+                        items: assigne.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedAssigne = newValue!;
+                          });
+                        },
                       ),
                     ),
-                )
-                : SizedBox(
-                    width: double.infinity,
-                    height: 400,
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.all(16),
-                      separatorBuilder: (context, index) => Container(height: 8),
-                      itemCount: taskList.length,
-                      itemBuilder: (context, index) {
-                        final task = taskList[index];
-                        return TaskTile(task: task);
-                      },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 50.0,
+                      decoration: kInputBox,
+                      child: DropdownButton<String>(
+                        underline: const SizedBox(),
+                        hint: const Text('All Priority'),
+                        value: selectedPriority,
+                        items: Priority.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedPriority = newValue!;
+                          });
+                        },
+                      ),
                     ),
                   ),
-          ],
+                ],
+              ),
+              taskList.isEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 50.0),
+                      child: Center(
+                        child: Text(
+                          "No Current Task Created !",
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      width: double.infinity,
+                      height: 400,
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        separatorBuilder: (context, index) =>
+                            Container(height: 8),
+                        itemCount: taskList.length,
+                        itemBuilder: (context, index) {
+                          final task = taskList[index];
+                          return TaskTile(task: task);
+                        },
+                      ),
+                    ),
+            ],
+          ),
         ),
       ),
     );

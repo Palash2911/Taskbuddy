@@ -11,7 +11,8 @@ import '../../models/task.dart';
 import '../../providers/task_provider.dart';
 
 class AddTaskAlertDialog extends StatefulWidget {
-  const AddTaskAlertDialog({super.key});
+  final List<dynamic> assignee;
+  const AddTaskAlertDialog({super.key, required this.assignee});
 
   @override
   State<AddTaskAlertDialog> createState() => _AddTaskAlertDialogState();
@@ -38,14 +39,8 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
     Type('Low', false),
   ];
 
-  final List<String> options = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
-    'Option 4',
-    'Option 5'
-  ];
-  List<String> selectedOptions = [];
+  List<dynamic> options = [];
+  List<dynamic> selectedOptions = [];
 
   @override
   void initState() {
@@ -58,6 +53,7 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
     _taskTitleController.dispose();
     _descriptionController.dispose();
     _dateController.dispose();
+    options = widget.assignee;
     super.dispose();
   }
 
@@ -132,7 +128,7 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                 children: <Widget>[
                   TextFormField(
                     controller: _taskTitleController,
-                    style:  TextStyle(fontSize: 14),
+                    style:  const TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -254,7 +250,7 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                       const SizedBox(width: 15.0),
                       SizedBox(
                         height: 50,
-                        width: 200,
+                        width: 180,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
@@ -269,26 +265,21 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                                     ngoType = type[index].name;
                                   });
                                 },
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                    right: 1,
+                                child: RawChip(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: RawChip(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    label: Text(
-                                      type[index].name,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: !type[index].isSelected
-                                              ? Colors.blue
-                                              : Colors.white),
-                                    ),
-                                    backgroundColor: !type[index].isSelected
-                                        ? Colors.white
-                                        : Colors.blue,
+                                  label: Text(
+                                    type[index].name,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: !type[index].isSelected
+                                            ? Colors.blue
+                                            : Colors.white),
                                   ),
+                                  backgroundColor: !type[index].isSelected
+                                      ? Colors.white
+                                      : Colors.blue,
                                 ),
                               );
                             }),
@@ -300,16 +291,16 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                       const Icon(
                         CupertinoIcons.person_2,
                       ),
-                      SizedBox(width: 15.0),
+                      const SizedBox(width: 15.0),
                       Flexible(
                         child: Container(
                           decoration: kInputBox,
-                          padding: EdgeInsets.all(2.0),
+                          padding: const EdgeInsets.all(2.0),
                           child: MultiSelectFormField(
                             hintWidget: const SizedBox(),
                             autovalidate: AutovalidateMode.disabled,
-                            title: const Text('Assigne'),
-                            dataSource: options.map((String option) {
+                            title: const Text('Assignee'),
+                            dataSource: options.map((option) {
                               return {'display': option, 'value': option};
                             }).toList(),
                             textField: 'display',

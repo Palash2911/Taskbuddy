@@ -9,11 +9,38 @@ class TaskProvider extends ChangeNotifier {
 
   List<Tasks> _tasks = [];
 
-  List<Tasks> get tasks =>
-      _tasks.where((todo) => todo.isCompleted == false).toList();
+  // List<Tasks> get tasks =>
+  //     _tasks.where((todo) => todo.isCompleted == false).toList();
 
   List<Tasks> get tasksCompleted =>
       _tasks.where((todo) => todo.isCompleted == true).toList();
+
+  // List<Tasks> get taskslow =>
+  //     _tasks.where((todo) => todo.priority == 2).toList();
+  //
+  // List<Tasks> get taskshigh =>
+  //     _tasks.where((todo) => todo.priority == 0).toList();
+  //
+  // List<Tasks> get tasksmed =>
+  //     _tasks.where((todo) => todo.priority == 1).toList();
+
+  List<Tasks> tasksFilter(int priority, String Assignee) {
+    if(priority == 3)
+      {
+          if(Assignee == "All") {
+            return _tasks.where((todo) => todo.isCompleted == false).toList();
+          }
+          else {
+            return _tasks.where((todo) => todo.isCompleted == false && todo.assignees.contains(Assignee)).toList();
+          }
+      }
+    else {
+      if(Assignee == "All") {
+        return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority).toList();
+      }
+    }
+    return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority && todo.assignees.contains(Assignee)).toList();
+  }
 
   Future deleteTask(String taskId) async {
     await db

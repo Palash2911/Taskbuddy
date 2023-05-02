@@ -268,7 +268,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                       const SizedBox(width: 15.0),
                       SizedBox(
                         height: 50,
-                        width: 200,
+                        width: 180,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
@@ -283,26 +283,21 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                                     ngoType = type[index].name;
                                   });
                                 },
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                    right: 1,
+                                child: RawChip(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: RawChip(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    label: Text(
-                                      type[index].name,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: !type[index].isSelected
-                                              ? Colors.blue
-                                              : Colors.white),
-                                    ),
-                                    backgroundColor: !type[index].isSelected
-                                        ? Colors.white
-                                        : Colors.blue,
+                                  label: Text(
+                                    type[index].name,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: !type[index].isSelected
+                                            ? Colors.blue
+                                            : Colors.white),
                                   ),
+                                  backgroundColor: !type[index].isSelected
+                                      ? Colors.white
+                                      : Colors.blue,
                                 ),
                               );
                             }),
