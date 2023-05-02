@@ -78,6 +78,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         desc: description,
         assignees: ["Self"],
         isCompleted: false,
+        priority: 1,
       ),
     )
         .then((value) {

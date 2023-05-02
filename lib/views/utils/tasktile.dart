@@ -45,32 +45,36 @@ class _TaskTileState extends State<TaskTile> {
           onChanged: (bool? value) {
             final provider =
             Provider.of<TaskProvider>(context, listen: false);
-            final isDone = provider.toggleTodoStatus(widget.task);
+            provider.toggleTodoStatus(widget.task);
           },
         ),
-        title: Flexible(child: Text(widget.task.title)),
-        subtitle: Text(widget.task.dueDate),
+        title: Text(widget.task.title, maxLines: 5,
+          overflow: TextOverflow.ellipsis,),
+        subtitle: FittedBox(fit: BoxFit.scaleDown,child: Text(widget.task.dueDate)),
         trailing: SizedBox(
-          width: 150,
-          child: Row(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.task.assignees.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Chip(
-                        label: Text(widget.task.assignees[index]),
-                      ),
-                    );
-                  },
+          width: 130,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.task.assignees.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Chip(
+                          label: Text(widget.task.assignees[index]),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              TaskPriority(priority: eTaskPriority.low),
-            ],
+                TaskPriority(priority: widget.task.priority==0?eTaskPriority.high:widget.task.priority==1?eTaskPriority.medium:eTaskPriority.low),
+              ],
+            ),
           ),
         ),
       ),

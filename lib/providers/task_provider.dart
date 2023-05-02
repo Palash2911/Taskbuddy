@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:taskbuddy/models/task.dart';
 
 class TaskProvider extends ChangeNotifier {
@@ -41,6 +41,7 @@ class TaskProvider extends ChangeNotifier {
         "Task_Title": task.title,
         "IsCompleted": task.isCompleted,
         "CreatedTime": task.createdTime,
+        "Priority": task.priority,
       });
       notifyListeners();
     } catch (e) {
@@ -61,7 +62,8 @@ class TaskProvider extends ChangeNotifier {
         "Task_Desc": task.desc,
         "Task_Title": task.title,
         "IsCompleted": task.isCompleted,
-        "CreatedTime": task.createdTime
+        "CreatedTime": task.createdTime,
+        "Priority": task.priority,
       });
       task.id = t.id;
       notifyListeners();
@@ -90,6 +92,7 @@ class TaskProvider extends ChangeNotifier {
               desc: element['Task_Desc'],
               assignees: element['Assignee'],
               isCompleted: element['IsCompleted'],
+              priority: element['Priority'],
             ),
           );
         });
