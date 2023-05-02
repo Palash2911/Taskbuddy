@@ -5,12 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:taskbuddy/models/assigne.dart';
-import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
-import 'package:taskbuddy/views/createTaskScreen.dart';
 import 'package:taskbuddy/views/utils/AppDrawer.dart';
-import 'package:taskbuddy/views/utils/bottombar.dart';
 import 'package:taskbuddy/views/utils/dialog_box.dart';
 import 'package:taskbuddy/views/utils/tasktile.dart';
 
