@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:taskbuddy/models/task.dart';
 
 class TaskProvider extends ChangeNotifier {
@@ -9,11 +9,38 @@ class TaskProvider extends ChangeNotifier {
 
   List<Tasks> _tasks = [];
 
-  List<Tasks> get tasks =>
-      _tasks.where((todo) => todo.isCompleted == false).toList();
+  // List<Tasks> get tasks =>
+  //     _tasks.where((todo) => todo.isCompleted == false).toList();
 
   List<Tasks> get tasksCompleted =>
       _tasks.where((todo) => todo.isCompleted == true).toList();
+
+  // List<Tasks> get taskslow =>
+  //     _tasks.where((todo) => todo.priority == 2).toList();
+  //
+  // List<Tasks> get taskshigh =>
+  //     _tasks.where((todo) => todo.priority == 0).toList();
+  //
+  // List<Tasks> get tasksmed =>
+  //     _tasks.where((todo) => todo.priority == 1).toList();
+
+  List<Tasks> tasksFilter(int priority, String Assignee) {
+    if(priority == 3)
+      {
+          if(Assignee == "All") {
+            return _tasks.where((todo) => todo.isCompleted == false).toList();
+          }
+          else {
+            return _tasks.where((todo) => todo.isCompleted == false && todo.assignees.contains(Assignee)).toList();
+          }
+      }
+    else {
+      if(Assignee == "All") {
+        return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority).toList();
+      }
+    }
+    return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority && todo.assignees.contains(Assignee)).toList();
+  }
 
   Future deleteTask(String taskId) async {
     await db
@@ -41,6 +68,7 @@ class TaskProvider extends ChangeNotifier {
         "Task_Title": task.title,
         "IsCompleted": task.isCompleted,
         "CreatedTime": task.createdTime,
+        "Priority": task.priority,
       });
       notifyListeners();
     } catch (e) {
@@ -61,7 +89,8 @@ class TaskProvider extends ChangeNotifier {
         "Task_Desc": task.desc,
         "Task_Title": task.title,
         "IsCompleted": task.isCompleted,
-        "CreatedTime": task.createdTime
+        "CreatedTime": task.createdTime,
+        "Priority": task.priority,
       });
       task.id = t.id;
       notifyListeners();
@@ -90,6 +119,7 @@ class TaskProvider extends ChangeNotifier {
               desc: element['Task_Desc'],
               assignees: element['Assignee'],
               isCompleted: element['IsCompleted'],
+              priority: element['Priority'],
             ),
           );
         });

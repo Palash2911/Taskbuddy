@@ -16,7 +16,7 @@ class TaskPriority extends StatelessWidget {
         iconColor = Colors.red;
         break;
       case eTaskPriority.medium:
-        iconColor = Colors.yellow;
+        iconColor = Colors.amber;
         break;
       case eTaskPriority.low:
       default:

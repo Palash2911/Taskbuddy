@@ -34,10 +34,13 @@ class _HistoryPageState extends State<HistoryPage> {
       body: Column(
         children: [
           taskList.isEmpty
-              ? const Center(
-            child: Text(
-              "No Task Completed ",
-              style: TextStyle(fontSize: 18),
+              ? const Padding(
+            padding:  EdgeInsets.only(top: 50.0),
+            child: Center(
+              child: Text(
+                "No Task Completed !",
+                style: TextStyle(fontSize: 25),
+              ),
             ),
           )
               : SizedBox(

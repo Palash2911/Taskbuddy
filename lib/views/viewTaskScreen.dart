@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/views/constants.dart';
+import 'package:taskbuddy/views/utils/edittaskdialog.dart';
 import 'package:taskbuddy/views/utils/taskPriority.dart';
 
 class ViewTask extends StatefulWidget {
@@ -93,10 +94,19 @@ class _ViewTaskState extends State<ViewTask> {
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
-                                    TaskPriority(priority: eTaskPriority.high),
+                                    TaskPriority(
+                                        priority: widget.task.priority == 0
+                                            ? eTaskPriority.high
+                                            : widget.task.priority == 1
+                                                ? eTaskPriority.medium
+                                                : eTaskPriority.low),
                                     SizedBox(width: 5.0),
                                     Text(
-                                      'High',
+                                      widget.task.priority == 0
+                                          ? "High"
+                                          : widget.task.priority == 1
+                                              ? "Medium"
+                                              : "Low",
                                       style: TextStyle(fontSize: 14.0),
                                     ),
                                   ],
@@ -128,14 +138,26 @@ class _ViewTaskState extends State<ViewTask> {
                       ],
                     ),
                     const SizedBox(height: 10.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        OutlinedButton(
-                            onPressed: () {}, child: Text("Edit Task")),
-                        ElevatedButton(
-                            onPressed: () {}, child: Text("Mark as Complete")),
-                      ],
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => EditTaskDialog(
+                                task: Tasks(
+                                  createdTime: widget.task.createdTime,
+                                  id: widget.task.id,
+                                  dueDate: widget.task.dueDate,
+                                  title: widget.task.title,
+                                  desc: widget.task.desc,
+                                  assignees: [],
+                                  isCompleted: widget.task.isCompleted,
+                                  priority: widget.task.priority,
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text("Edit Task")),
                     )
                   ],
                 ),

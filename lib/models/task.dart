@@ -10,6 +10,7 @@ class Tasks {
   final List<dynamic> assignees;
   bool isCompleted;
   String createdTime;
+  final int priority;
 
   Tasks({
     required this.createdTime,
@@ -19,15 +20,16 @@ class Tasks {
     required this.desc,
     required this.assignees,
     required this.isCompleted,
+    required this.priority,
   });
 }
 
-Tasks task = Tasks(
-  createdTime: DateTime.now().toString(),
-  id: "12",
-  dueDate: "2023-05-01",
-  title: "Complete this task right now",
-  desc: "Lorem ipsum dolor sit amet",
-  assignees: ["Dip", "Palash"],
-  isCompleted: false,
-);
+// Tasks task = Tasks(
+//   createdTime: DateTime.now().toString(),
+//   id: "12",
+//   dueDate: "2023-05-01",
+//   title: "Complete this task right now",
+//   desc: "Lorem ipsum dolor sit amet",
+//   assignees: ["Dip", "Palash"],
+//   isCompleted: false,
+// );

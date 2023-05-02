@@ -31,8 +31,16 @@ class _TaskPageState extends State<TaskPage> {
     "Self",
   ];
 
+  List<String> Priority = [
+    "All Priority",
+    "High",
+    "Medium",
+    "Low",
+  ];
+
   var isLoading = false;
   String? selectedAssigne;
+  String? selectedPriority;
   final auth = FirebaseAuth.instance;
   var isInit = true;
   CollectionReference? assigneeRef;
@@ -132,232 +140,260 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
-    final taskList = provider.tasks;
+    var taskList = provider.tasksFilter(3, "All");
+    if(selectedAssigne == null)
+      {
+        if (selectedPriority == "High") {
+          taskList = provider.tasksFilter(0, "All");
+        } else if (selectedPriority == "Medium") {
+          taskList = provider.tasksFilter(1, "All");
+        } else if(selectedPriority == "Low") {
+          taskList = provider.tasksFilter(2, "All");
+        } else {
+          taskList = provider.tasksFilter(3, "All");
+        }
+      }
+    else{
+      if (selectedPriority == "High") {
+        taskList = provider.tasksFilter(0, selectedAssigne!);
+      } else if (selectedPriority == "Medium") {
+        taskList = provider.tasksFilter(1, selectedAssigne!);
+      } else if(selectedPriority == "Low") {
+        taskList = provider.tasksFilter(2, selectedAssigne!);
+      } else {
+        taskList = provider.tasksFilter(3, selectedAssigne!);
+      }
+    }
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Task Buddy',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.person_add_alt_1_rounded,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    scrollable: true,
-                    title: const Text(
-                      'Add People',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16, color: Colors.blue),
-                    ),
-                    content: isLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : SizedBox(
-                            height: height * 0.35,
-                            width: width,
-                            child: Form(
-                              key: _formKey,
-                              child: SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      controller: _nameController,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: 20,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Task Buddy',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.person_add_alt_1_rounded,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      scrollable: true,
+                      title: const Text(
+                        'Add People',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16, color: Colors.blue),
+                      ),
+                      content: isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : SizedBox(
+                              height: height * 0.35,
+                              width: width,
+                              child: Form(
+                                key: _formKey,
+                                child: SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: _nameController,
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 20,
+                                          ),
+                                          hintText: 'Elon Musk',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 14),
+                                          icon: const Icon(
+                                            CupertinoIcons.person,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
                                         ),
-                                        hintText: 'Elon Musk',
-                                        hintStyle:
-                                            const TextStyle(fontSize: 14),
-                                        icon: const Icon(
-                                          CupertinoIcons.person,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please Enter a Name';
+                                          }
+                                          return null;
+                                        },
                                       ),
-                                      keyboardType: TextInputType.emailAddress,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please Enter a Name';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    SizedBox(
-                                      height: 10.0,
-                                    ),
-                                    TextFormField(
-                                      controller: _phoneController,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: 20,
-                                        ),
-                                        hintText: '+91 98XXXXXXXX',
-                                        hintStyle:
-                                            const TextStyle(fontSize: 14),
-                                        icon: const Icon(
-                                          CupertinoIcons.phone,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
+                                      SizedBox(
+                                        height: 10.0,
                                       ),
-                                      keyboardType: TextInputType.emailAddress,
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Please Enter a Number';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ],
+                                      TextFormField(
+                                        controller: _phoneController,
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 20,
+                                          ),
+                                          hintText: '+91 98XXXXXXXX',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 14),
+                                          icon: const Icon(
+                                            CupertinoIcons.phone,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ),
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Please Enter a Number';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Cancel'),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                      ElevatedButton(
-                        child: const Text('Add'),
-                        onPressed: () {
-                          _addAssingee(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancel'),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                        ElevatedButton(
+                          child: const Text('Add'),
+                          onPressed: () {
+                            _addAssingee(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            )
+          ],
+          centerTitle: true,
+        ),
+        drawer: const Drawer(
+          child: cAppDrawer(),
+        ),
+        floatingActionButton: FittedBox(
+          child: FloatingActionButton.extended(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => AddTaskAlertDialog(
+                        assignee: assigne,
+                      ));
             },
-          )
-        ],
-        centerTitle: true,
-      ),
-      drawer: const Drawer(
-        child: cAppDrawer(),
-      ),
-      floatingActionButton: FittedBox(
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            showDialog(
-                context: context, builder: (context) => AddTaskAlertDialog());
-
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => CreateTaskScreen(
-            //       assignee: assigne,
-            //     ),
-            //   ),
-            // );
-          },
-          icon: const Icon(
-            Icons.add,
-            size: 30,
-          ),
-          label: const Text(
-            "Add Task",
+            icon: const Icon(
+              Icons.add,
+              size: 30,
+            ),
+            label: const Text(
+              "Add Task",
+            ),
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          Row(
+        body: RefreshIndicator(
+          onRefresh: getAssignee,
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 50.0,
-                  decoration: kInputBox,
-                  child: DropdownButton<String>(
-                    underline: SizedBox(),
-                    hint: const Text('Assignee'),
-                    value: selectedAssigne,
-                    items: assigne.map((category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedAssigne = newValue!;
-                      });
-                    },
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 50.0,
+                      decoration: kInputBox,
+                      child: DropdownButton<String>(
+                        underline: SizedBox(),
+                        hint: const Text("All"),
+                        value: selectedAssigne,
+                        items: assigne.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedAssigne = newValue!;
+                          });
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 50.0,
-                  decoration: kInputBox,
-                  child: DropdownButton<String>(
-                    underline: SizedBox(),
-                    hint: const Text('Priority'),
-                    value: selectedAssigne,
-                    items: assigne.map((category) {
-                      return DropdownMenuItem<String>(
-                        value: category,
-                        child: Text(category),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedAssigne = newValue!;
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 50.0,
+                      decoration: kInputBox,
+                      child: DropdownButton<String>(
+                        underline: const SizedBox(),
+                        hint: const Text('All Priority'),
+                        value: selectedPriority,
+                        items: Priority.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedPriority = newValue!;
+                          });
+                        },
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
+              taskList.isEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 50.0),
+                      child: Center(
+                        child: Text(
+                          "No Current Task Created !",
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      width: double.infinity,
+                      height: 400,
+                      child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(16),
+                        separatorBuilder: (context, index) =>
+                            Container(height: 8),
+                        itemCount: taskList.length,
+                        itemBuilder: (context, index) {
+                          final task = taskList[index];
+                          return TaskTile(task: task);
+                        },
+                      ),
+                    ),
             ],
           ),
-          taskList.isEmpty
-              ? const Center(
-                  child: Text(
-                    "No Current Task Created ",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                )
-              : Container(
-                  width: double.infinity,
-                  height: 400,
-                  child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    separatorBuilder: (context, index) => Container(height: 8),
-                    itemCount: taskList.length,
-                    itemBuilder: (context, index) {
-                      final task = taskList[index];
-                      return TaskTile(task: task);
-                    },
-                  ),
-                ),
-        ],
+        ),
       ),
     );
   }

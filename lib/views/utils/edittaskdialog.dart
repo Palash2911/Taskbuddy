@@ -9,16 +9,18 @@ import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 import '../../models/task.dart';
 import '../../providers/task_provider.dart';
+import '../homepage.dart';
 
-class AddTaskAlertDialog extends StatefulWidget {
-  final List<dynamic> assignee;
-  const AddTaskAlertDialog({super.key, required this.assignee});
+class EditTaskDialog extends StatefulWidget {
+  final Tasks task;
+
+  const EditTaskDialog({super.key, required this.task});
 
   @override
-  State<AddTaskAlertDialog> createState() => _AddTaskAlertDialogState();
+  State<EditTaskDialog> createState() => _EditTaskDialogState();
 }
 
-class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
+class _EditTaskDialogState extends State<EditTaskDialog> {
   String? selectedCategory;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _taskTitleController = TextEditingController();
@@ -39,8 +41,14 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
     Type('Low', false),
   ];
 
-  List<dynamic> options = [];
-  List<dynamic> selectedOptions = [];
+  final List<String> options = [
+    'Option 1',
+    'Option 2',
+    'Option 3',
+    'Option 4',
+    'Option 5'
+  ];
+  List<String> selectedOptions = [];
 
   @override
   void initState() {
@@ -53,14 +61,21 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
     _taskTitleController.dispose();
     _descriptionController.dispose();
     _dateController.dispose();
-    options = widget.assignee;
     super.dispose();
   }
 
   void setFields() {
-    _taskTitleController.text = "";
-    _descriptionController.text = "";
-    _dateController.text = "";
+    _taskTitleController.text = widget.task.title;
+    _descriptionController.text = widget.task.desc;
+    _dateController.text = widget.task.dueDate;
+    if (widget.task.priority == 0) {
+      type[0].isSelected = true;
+    } else if (widget.task.priority == 1) {
+      type[1].isSelected = true;
+    } else {
+      type[2].isSelected = true;
+    }
+    setState(() {});
   }
 
   List<String> assigne = [
@@ -70,22 +85,26 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
 
   String? selectedAssigne;
 
-  Future addTask() async {
+  Future editTask() async {
     setState(() {
       isLoading = true;
     });
     var taskProvider = Provider.of<TaskProvider>(context, listen: false);
     await taskProvider
-        .createTask(
+        .editTask(
       Tasks(
         createdTime: DateTime.now().toString(),
-        id: "",
+        id: widget.task.id,
         dueDate: date,
         title: driveTitle,
         desc: description,
         assignees: ["Self"],
         isCompleted: false,
-        priority: type[0].isSelected?0:type[1].isSelected?1:2,
+        priority: type[0].isSelected
+            ? 0
+            : type[1].isSelected
+                ? 1
+                : 2,
       ),
     )
         .then((value) {
@@ -93,7 +112,7 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
         isLoading = false;
       });
       Fluttertoast.showToast(
-        msg: "Task Created Successfully !",
+        msg: "Task Edited Successfully !",
         toastLength: Toast.LENGTH_SHORT,
         timeInSecForIosWeb: 1,
         backgroundColor: kprimaryColor,
@@ -105,7 +124,6 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
       // );
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +146,7 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                 children: <Widget>[
                   TextFormField(
                     controller: _taskTitleController,
-                    style:  const TextStyle(fontSize: 14),
+                    style: TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -291,16 +309,16 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                       const Icon(
                         CupertinoIcons.person_2,
                       ),
-                      const SizedBox(width: 15.0),
+                      SizedBox(width: 15.0),
                       Flexible(
                         child: Container(
                           decoration: kInputBox,
-                          padding: const EdgeInsets.all(2.0),
+                          padding: EdgeInsets.all(2.0),
                           child: MultiSelectFormField(
                             hintWidget: const SizedBox(),
                             autovalidate: AutovalidateMode.disabled,
-                            title: const Text('Assignee'),
-                            dataSource: options.map((option) {
+                            title: const Text('Assigne'),
+                            dataSource: options.map((String option) {
                               return {'display': option, 'value': option};
                             }).toList(),
                             textField: 'display',
@@ -336,8 +354,12 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
           ),
           ElevatedButton(
             onPressed: () {
-              addTask();
-              Navigator.of(context).pop();
+              editTask();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (ctx) => HomePage(),
+                ),
+              );
             },
             child: const Text('Save'),
           ),
