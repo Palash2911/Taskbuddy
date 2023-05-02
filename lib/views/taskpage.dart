@@ -141,24 +141,22 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
     var taskList = provider.tasksFilter(3, "All");
-    if(selectedAssigne == null)
-      {
-        if (selectedPriority == "High") {
-          taskList = provider.tasksFilter(0, "All");
-        } else if (selectedPriority == "Medium") {
-          taskList = provider.tasksFilter(1, "All");
-        } else if(selectedPriority == "Low") {
-          taskList = provider.tasksFilter(2, "All");
-        } else {
-          taskList = provider.tasksFilter(3, "All");
-        }
+    if (selectedAssigne == null) {
+      if (selectedPriority == "High") {
+        taskList = provider.tasksFilter(0, "All");
+      } else if (selectedPriority == "Medium") {
+        taskList = provider.tasksFilter(1, "All");
+      } else if (selectedPriority == "Low") {
+        taskList = provider.tasksFilter(2, "All");
+      } else {
+        taskList = provider.tasksFilter(3, "All");
       }
-    else{
+    } else {
       if (selectedPriority == "High") {
         taskList = provider.tasksFilter(0, selectedAssigne!);
       } else if (selectedPriority == "Medium") {
         taskList = provider.tasksFilter(1, selectedAssigne!);
-      } else if(selectedPriority == "Low") {
+      } else if (selectedPriority == "Low") {
         taskList = provider.tasksFilter(2, selectedAssigne!);
       } else {
         taskList = provider.tasksFilter(3, selectedAssigne!);
@@ -233,9 +231,7 @@ class _TaskPageState extends State<TaskPage> {
                                           return null;
                                         },
                                       ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
+                                      const SizedBox(height: 10.0),
                                       TextFormField(
                                         controller: _phoneController,
                                         decoration: InputDecoration(
@@ -272,7 +268,10 @@ class _TaskPageState extends State<TaskPage> {
                       actions: <Widget>[
                         TextButton(
                           child: const Text('Cancel'),
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () {
+                            getAssignee();
+                            Navigator.of(context).pop();
+                          },
                         ),
                         ElevatedButton(
                           child: const Text('Add'),

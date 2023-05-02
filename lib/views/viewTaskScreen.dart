@@ -150,7 +150,7 @@ class _ViewTaskState extends State<ViewTask> {
                                   dueDate: widget.task.dueDate,
                                   title: widget.task.title,
                                   desc: widget.task.desc,
-                                  assignees: [],
+                                  assignees: widget.task.assignees,
                                   isCompleted: widget.task.isCompleted,
                                   priority: widget.task.priority,
                                 ),
