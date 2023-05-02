@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 Color kprimaryColor = Colors.blue;
-Color ksecondaryColor = Color(0xfffE3F0E2);
+Color ksecondaryColor = Colors.white;
 Color? kHighColor = Colors.red[200];
 Color? kLowColor = Colors.blue[200];
 Color? kMidColor = Colors.yellow[200];

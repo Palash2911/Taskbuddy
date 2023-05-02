@@ -9,8 +9,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: MyNavigationBar(),
+    return SafeArea(
+      child: Scaffold(
+        bottomNavigationBar: MyNavigationBar(),
+      ),
     );
   }
 }

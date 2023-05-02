@@ -23,11 +23,10 @@ class _HistoryPageState extends State<HistoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Task Buddy',
           style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true,
       ),
       drawer: const Drawer(
         child: cAppDrawer(),
@@ -64,6 +63,4 @@ class _HistoryPageState extends State<HistoryPage> {
   final dueDateController = TextEditingController();
   final titleController = TextEditingController();
   final descController = TextEditingController();
-
-  
 }
