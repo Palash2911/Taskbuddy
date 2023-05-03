@@ -89,55 +89,6 @@ class _TaskPageState extends State<TaskPage> {
     super.dispose();
   }
 
-  Future _addAssingee(BuildContext ctx) async {
-    var authProvider = Provider.of<Auth>(ctx, listen: false);
-    var assigneProvider = Provider.of<AssigneeProvider>(ctx, listen: false);
-    final isValid = _formKey.currentState!.validate();
-    setState(() {
-      isLoading = true;
-    });
-    _formKey.currentState!.save();
-
-    if (isValid) {
-      var ai = await assigneProvider
-          .createAssigne(
-        Assigne(
-          id: "",
-          name: _nameController.text,
-          number: _phoneController.text,
-          taskId: [],
-        ),
-      )
-          .then((value) {
-        setState(() {
-          _nameController.text = "";
-          _phoneController.text = "";
-          isLoading = false;
-        });
-        Fluttertoast.showToast(
-          msg: "Assignee Added Successfully !",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: kprimaryColor,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-      });
-    } else {
-      setState(() {
-        Fluttertoast.showToast(
-          msg: "Please Fill Details !",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          backgroundColor: kprimaryColor,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
-        isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
@@ -153,25 +104,26 @@ class _TaskPageState extends State<TaskPage> {
         taskList = provider.tasksFilter(3, "All");
       }
     } else {
-    if (selectedAssigne == null) {
-      if (selectedPriority == "High") {
-        taskList = provider.tasksFilter(0, "All");
-      } else if (selectedPriority == "Medium") {
-        taskList = provider.tasksFilter(1, "All");
-      } else if (selectedPriority == "Low") {
-        taskList = provider.tasksFilter(2, "All");
+      if (selectedAssigne == null) {
+        if (selectedPriority == "High") {
+          taskList = provider.tasksFilter(0, "All");
+        } else if (selectedPriority == "Medium") {
+          taskList = provider.tasksFilter(1, "All");
+        } else if (selectedPriority == "Low") {
+          taskList = provider.tasksFilter(2, "All");
+        } else {
+          taskList = provider.tasksFilter(3, "All");
+        }
       } else {
-        taskList = provider.tasksFilter(3, "All");
-      }
-    } else {
-      if (selectedPriority == "High") {
-        taskList = provider.tasksFilter(0, selectedAssigne!);
-      } else if (selectedPriority == "Medium") {
-        taskList = provider.tasksFilter(1, selectedAssigne!);
-      } else if (selectedPriority == "Low") {
-        taskList = provider.tasksFilter(2, selectedAssigne!);
-      } else {
-        taskList = provider.tasksFilter(3, selectedAssigne!);
+        if (selectedPriority == "High") {
+          taskList = provider.tasksFilter(0, selectedAssigne!);
+        } else if (selectedPriority == "Medium") {
+          taskList = provider.tasksFilter(1, selectedAssigne!);
+        } else if (selectedPriority == "Low") {
+          taskList = provider.tasksFilter(2, selectedAssigne!);
+        } else {
+          taskList = provider.tasksFilter(3, selectedAssigne!);
+        }
       }
     }
     var width = MediaQuery.of(context).size.width;
@@ -234,16 +186,17 @@ class _TaskPageState extends State<TaskPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       padding: const EdgeInsets.all(10),
+                      width: 200,
                       height: 50.0,
                       decoration: kInputBox,
                       child: DropdownButton<String>(
-                        underline: SizedBox(),
-                        hint: const Text("All"),
+                        underline: const SizedBox(),
+                        hint: const FittedBox(fit: BoxFit.scaleDown,child: Text("All Assignee")),
                         value: selectedAssigne,
                         items: assigne.map((category) {
                           return DropdownMenuItem<String>(
                             value: category,
-                            child: Text(category),
+                            child: SizedBox(height: 30, width: 150,child: FittedBox(fit: BoxFit.scaleDown,child: Text(category))),
                           );
                         }).toList(),
                         onChanged: (newValue) {

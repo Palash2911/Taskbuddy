@@ -9,20 +9,8 @@ class TaskProvider extends ChangeNotifier {
 
   List<Tasks> _tasks = [];
 
-  // List<Tasks> get tasks =>
-  //     _tasks.where((todo) => todo.isCompleted == false).toList();
-
   List<Tasks> get tasksCompleted =>
       _tasks.where((todo) => todo.isCompleted == true).toList();
-
-  // List<Tasks> get taskslow =>
-  //     _tasks.where((todo) => todo.priority == 2).toList();
-  //
-  // List<Tasks> get taskshigh =>
-  //     _tasks.where((todo) => todo.priority == 0).toList();
-  //
-  // List<Tasks> get tasksmed =>
-  //     _tasks.where((todo) => todo.priority == 1).toList();
 
   List<Tasks> tasksFilter(int priority, String Assignee) {
     if(priority == 3)
@@ -40,18 +28,6 @@ class TaskProvider extends ChangeNotifier {
       }
     }
     return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority && todo.assignees.contains(Assignee)).toList();
-  }
-
-  Future deleteTask(String taskId) async {
-    await db
-        .collection("Users")
-        .doc(auth.currentUser!.uid)
-        .collection("Tasks")
-        .doc(taskId)
-        .delete()
-        .catchError((e) {
-      print(e);
-    });
   }
 
   Future editTask(Tasks task) async {
@@ -135,8 +111,6 @@ class TaskProvider extends ChangeNotifier {
       });
 
   void addTodo(Tasks task) => createTask(task);
-
-  void removeTodo(Tasks task) => deleteTask(task.id);
 
   bool toggleTodoStatus(Tasks task) {
     task.isCompleted = !task.isCompleted;

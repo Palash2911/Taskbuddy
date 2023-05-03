@@ -8,6 +8,10 @@ class AssigneeProvider extends ChangeNotifier {
   final db = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
 
+  // List<Assigne> _assignee = [];
+  //
+  // List<Assigne> get assignees => _assignee.toList();
+
   Future deleteAssigne(String assigneId) async {
     try {
       await db
@@ -27,10 +31,11 @@ class AssigneeProvider extends ChangeNotifier {
       await db
           .collection("Users")
           .doc(auth.currentUser!.uid)
-          .collection("Assignee").doc(assigne.id).update({
-        "Name":assigne.name,
+          .collection("Assignee")
+          .doc(assigne.id)
+          .update({
+        "Name": assigne.name,
         "Contact": assigne.number,
-        "TaskId": assigne.taskId,
       });
     } catch (e) {
       print(e);
@@ -43,10 +48,10 @@ class AssigneeProvider extends ChangeNotifier {
       var asi = await db
           .collection("Users")
           .doc(auth.currentUser!.uid)
-          .collection("Assignee").add({
-        "Name":assigne.name,
+          .collection("Assignee")
+          .add({
+        "Name": assigne.name,
         "Contact": assigne.number,
-        "TaskId": assigne.taskId,
       });
       assigne.id = asi.id;
     } catch (e) {
@@ -54,4 +59,35 @@ class AssigneeProvider extends ChangeNotifier {
       rethrow;
     }
   }
+
+  static var authUser = FirebaseAuth.instance;
+
+  static Stream<List<Assigne>> readAssignee() => FirebaseFirestore.instance
+          .collection("Users")
+          .doc(authUser.currentUser!.uid)
+          .collection("Assignee")
+          .snapshots()
+          .map((querySnapshot) {
+        List<Assigne> assignelist = [];
+        querySnapshot.docs.forEach((element) {
+          assignelist.add(
+            Assigne(
+              id: '',
+              name: '',
+              number: '',
+            ),
+          );
+        });
+        return assignelist;
+      });
+
+  // void setAssignee(List<Assigne> assignee) =>
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       _assignee = assignee;
+  //       notifyListeners();
+  //     });
+  //
+  // void addAssignee(Assigne assigne) => createAssigne(assigne);
+  //
+  // void updateAssignee(Assigne assigne) => updateAssignee(assigne);
 }
