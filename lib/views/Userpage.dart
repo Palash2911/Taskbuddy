@@ -173,14 +173,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     return Center(
                       child: Column(
                         children: [
-                          SizedBox(
-                            height: 300.0,
-                            child: Image.asset(
-                              'assets/images/noPost.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          const SizedBox(height: 20.0),
+                          const SizedBox(height: 100.0),
                           Text(
                             "No Assignee Yet !",
                             style: kTextPopM16,
