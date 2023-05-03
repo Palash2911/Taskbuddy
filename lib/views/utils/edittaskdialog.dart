@@ -41,14 +41,8 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
     Type('Low', false),
   ];
 
-  final List<String> options = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
-    'Option 4',
-    'Option 5'
-  ];
-  List<String> selectedOptions = [];
+  List<dynamic> options = [];
+  List<dynamic> selectedOptions = [];
 
   @override
   void initState() {
@@ -75,15 +69,8 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
     } else {
       type[2].isSelected = true;
     }
-    setState(() {});
+    options = widget.task.assignees;
   }
-
-  List<String> assigne = [
-    "All",
-    "Self",
-  ];
-
-  String? selectedAssigne;
 
   Future editTask() async {
     setState(() {
@@ -98,7 +85,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
         dueDate: date,
         title: driveTitle,
         desc: description,
-        assignees: ["Self"],
+        assignees: selectedOptions,
         isCompleted: false,
         priority: type[0].isSelected
             ? 0
@@ -318,18 +305,23 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                             hintWidget: const SizedBox(),
                             autovalidate: AutovalidateMode.disabled,
                             title: const Text('Assigne'),
-                            dataSource: options.map((String option) {
-                              return {'display': option, 'value': option};
-                            }).toList(),
+                            dataSource: options
+                                .map((option) => ({
+                                      "display": option.toString(),
+                                      "value": option.toString(),
+                                    }))
+                                .toList()
+                                .cast<dynamic>(),
                             textField: 'display',
                             valueField: 'value',
                             okButtonLabel: 'OK',
                             cancelButtonLabel: 'CANCEL',
+                            border: InputBorder.none,
                             initialValue: selectedOptions,
                             onSaved: (value) {
                               if (value == null) return;
                               setState(() {
-                                selectedOptions = List<String>.from(value);
+                                selectedOptions = value;
                               });
                             },
                           ),

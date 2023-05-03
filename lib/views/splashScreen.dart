@@ -43,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
           backgroundColor: ksecondaryColor,
           body: Center(
             child: SizedBox(
-              height: 200.0,
+              height: 350.0,
               child: Image.asset(
                 'assets/gala.png',
                 fit: BoxFit.contain,

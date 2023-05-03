@@ -153,6 +153,17 @@ class _TaskPageState extends State<TaskPage> {
         taskList = provider.tasksFilter(3, "All");
       }
     } else {
+    if (selectedAssigne == null) {
+      if (selectedPriority == "High") {
+        taskList = provider.tasksFilter(0, "All");
+      } else if (selectedPriority == "Medium") {
+        taskList = provider.tasksFilter(1, "All");
+      } else if (selectedPriority == "Low") {
+        taskList = provider.tasksFilter(2, "All");
+      } else {
+        taskList = provider.tasksFilter(3, "All");
+      }
+    } else {
       if (selectedPriority == "High") {
         taskList = provider.tasksFilter(0, selectedAssigne!);
       } else if (selectedPriority == "Medium") {

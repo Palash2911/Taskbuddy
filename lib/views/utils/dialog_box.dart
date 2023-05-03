@@ -12,7 +12,7 @@ import '../../providers/task_provider.dart';
 
 class AddTaskAlertDialog extends StatefulWidget {
   final List<dynamic> assignee;
-  const AddTaskAlertDialog({super.key, required this.assignee});
+  AddTaskAlertDialog({super.key, required this.assignee});
 
   @override
   State<AddTaskAlertDialog> createState() => _AddTaskAlertDialogState();
@@ -53,7 +53,6 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
     _taskTitleController.dispose();
     _descriptionController.dispose();
     _dateController.dispose();
-    options = widget.assignee;
     super.dispose();
   }
 
@@ -61,14 +60,14 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
     _taskTitleController.text = "";
     _descriptionController.text = "";
     _dateController.text = "";
+    options = widget.assignee.sublist(1);
+    selectedOptions = [];
+    var ds = options
+        .map((option) =>
+            {"display": option.toString(), "value": option.toString()})
+        .toList();
+    print(ds);
   }
-
-  List<String> assigne = [
-    "All",
-    "Self",
-  ];
-
-  String? selectedAssigne;
 
   Future addTask() async {
     setState(() {
@@ -83,9 +82,13 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
         dueDate: date,
         title: driveTitle,
         desc: description,
-        assignees: ["Self"],
+        assignees: selectedOptions,
         isCompleted: false,
-        priority: type[0].isSelected?0:type[1].isSelected?1:2,
+        priority: type[0].isSelected
+            ? 0
+            : type[1].isSelected
+                ? 1
+                : 2,
       ),
     )
         .then((value) {
@@ -105,7 +108,6 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
       // );
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +130,7 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                 children: <Widget>[
                   TextFormField(
                     controller: _taskTitleController,
-                    style:  const TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -300,18 +302,25 @@ class _AddTaskAlertDialogState extends State<AddTaskAlertDialog> {
                             hintWidget: const SizedBox(),
                             autovalidate: AutovalidateMode.disabled,
                             title: const Text('Assignee'),
-                            dataSource: options.map((option) {
-                              return {'display': option, 'value': option};
-                            }).toList(),
+                            dataSource: options
+                                .map((option) => ({
+                                      "display": option.toString(),
+                                      "value": option.toString(),
+                                    }))
+                                .toList()
+                                .cast<dynamic>(),
                             textField: 'display',
                             valueField: 'value',
                             okButtonLabel: 'OK',
                             cancelButtonLabel: 'CANCEL',
                             initialValue: selectedOptions,
+                            border: InputBorder.none,
                             onSaved: (value) {
-                              if (value == null) return;
+                              if (value == null) {
+                                return;
+                              }
                               setState(() {
-                                selectedOptions = List<String>.from(value);
+                                selectedOptions = value;
                               });
                             },
                           ),
