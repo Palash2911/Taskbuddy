@@ -126,14 +126,20 @@ class _ViewTaskState extends State<ViewTask> {
                           ],
                         ),
                         const SizedBox(height: 5),
-                        ListTile(
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: CircleAvatar()),
-                          title: Text(
-                            widget.task.assignees.toString(),
-                            style: kTextPopR14,
-                          ),
+                        ListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          children: widget.task.assignees.map((element) {
+                            return ListTile(
+                              leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: CircleAvatar()),
+                              title: Text(
+                                element.toString(),
+                                style: kTextPopR14,
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ],
                     ),

@@ -82,6 +82,10 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
+  Future _reload() async {
+    getAssignee();
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -177,7 +181,7 @@ class _TaskPageState extends State<TaskPage> {
           ],
         ),
         body: RefreshIndicator(
-          onRefresh: getAssignee,
+          onRefresh: _reload,
           child: Column(
             children: [
               Row(
@@ -191,12 +195,18 @@ class _TaskPageState extends State<TaskPage> {
                       decoration: kInputBox,
                       child: DropdownButton<String>(
                         underline: const SizedBox(),
-                        hint: const FittedBox(fit: BoxFit.scaleDown,child: Text("All Assignee")),
+                        hint: const FittedBox(
+                            fit: BoxFit.scaleDown, child: Text("All Assignee")),
                         value: selectedAssigne,
                         items: assigne.map((category) {
                           return DropdownMenuItem<String>(
                             value: category,
-                            child: SizedBox(height: 30, width: 150,child: FittedBox(fit: BoxFit.scaleDown,child: Text(category))),
+                            child: SizedBox(
+                                height: 30,
+                                width: 150,
+                                child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(category))),
                           );
                         }).toList(),
                         onChanged: (newValue) {
@@ -244,20 +254,20 @@ class _TaskPageState extends State<TaskPage> {
                       ),
                     )
                   : SizedBox(
-                      width: double.infinity,
-                      height: 400,
-                      child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.all(16),
-                        separatorBuilder: (context, index) =>
-                            Container(height: 8),
-                        itemCount: taskList.length,
-                        itemBuilder: (context, index) {
-                          final task = taskList[index];
-                          return TaskTile(task: task);
-                        },
-                      ),
+                    width: double.infinity,
+                    height: 400,
+                    child: ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(16),
+                      separatorBuilder: (context, index) =>
+                          Container(height: 8),
+                      itemCount: taskList.length,
+                      itemBuilder: (context, index) {
+                        final task = taskList[index];
+                        return TaskTile(task: task);
+                      },
                     ),
+                  ),
             ],
           ),
         ),

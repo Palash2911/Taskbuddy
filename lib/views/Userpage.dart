@@ -80,8 +80,6 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -109,7 +107,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.name,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please Enter a Name';
@@ -136,7 +134,7 @@ class _UsersScreenState extends State<UsersScreen> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please Enter a Number';
