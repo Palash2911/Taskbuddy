@@ -7,9 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:taskbuddy/models/assigne.dart';
 import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
-import 'package:taskbuddy/views/utils/AppDrawer.dart';
+import 'package:taskbuddy/views/Userpage.dart';
 import 'package:taskbuddy/views/utils/dialog_box.dart';
 import 'package:taskbuddy/views/utils/tasktile.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../providers/auth_provider.dart';
 import 'constants.dart';
@@ -141,24 +142,22 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
     var taskList = provider.tasksFilter(3, "All");
-    if(selectedAssigne == null)
-      {
-        if (selectedPriority == "High") {
-          taskList = provider.tasksFilter(0, "All");
-        } else if (selectedPriority == "Medium") {
-          taskList = provider.tasksFilter(1, "All");
-        } else if(selectedPriority == "Low") {
-          taskList = provider.tasksFilter(2, "All");
-        } else {
-          taskList = provider.tasksFilter(3, "All");
-        }
+    if (selectedAssigne == null) {
+      if (selectedPriority == "High") {
+        taskList = provider.tasksFilter(0, "All");
+      } else if (selectedPriority == "Medium") {
+        taskList = provider.tasksFilter(1, "All");
+      } else if (selectedPriority == "Low") {
+        taskList = provider.tasksFilter(2, "All");
+      } else {
+        taskList = provider.tasksFilter(3, "All");
       }
-    else{
+    } else {
       if (selectedPriority == "High") {
         taskList = provider.tasksFilter(0, selectedAssigne!);
       } else if (selectedPriority == "Medium") {
         taskList = provider.tasksFilter(1, selectedAssigne!);
-      } else if(selectedPriority == "Low") {
+      } else if (selectedPriority == "Low") {
         taskList = provider.tasksFilter(2, selectedAssigne!);
       } else {
         taskList = provider.tasksFilter(3, selectedAssigne!);
@@ -169,6 +168,7 @@ class _TaskPageState extends State<TaskPage> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text(
             'Task Buddy',
@@ -177,138 +177,41 @@ class _TaskPageState extends State<TaskPage> {
           actions: [
             IconButton(
               icon: const Icon(
-                Icons.person_add_alt_1_rounded,
+                Icons.logout_outlined,
                 color: Colors.white,
               ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      scrollable: true,
-                      title: const Text(
-                        'Add People',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16, color: Colors.blue),
-                      ),
-                      content: isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : SizedBox(
-                              height: height * 0.35,
-                              width: width,
-                              child: Form(
-                                key: _formKey,
-                                child: SizedBox(
-                                  width: 100,
-                                  height: 100,
-                                  child: Column(
-                                    children: [
-                                      TextFormField(
-                                        controller: _nameController,
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 20,
-                                          ),
-                                          hintText: 'Elon Musk',
-                                          hintStyle:
-                                              const TextStyle(fontSize: 14),
-                                          icon: const Icon(
-                                            CupertinoIcons.person,
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please Enter a Name';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: 10.0,
-                                      ),
-                                      TextFormField(
-                                        controller: _phoneController,
-                                        decoration: InputDecoration(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 20,
-                                          ),
-                                          hintText: '+91 98XXXXXXXX',
-                                          hintStyle:
-                                              const TextStyle(fontSize: 14),
-                                          icon: const Icon(
-                                            CupertinoIcons.phone,
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ),
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please Enter a Number';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Cancel'),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        ElevatedButton(
-                          child: const Text('Add'),
-                          onPressed: () {
-                            _addAssingee(context);
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
+              onPressed: () {},
             )
           ],
           centerTitle: true,
         ),
-        drawer: const Drawer(
-          child: cAppDrawer(),
-        ),
-        floatingActionButton: FittedBox(
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AddTaskAlertDialog(
-                        assignee: assigne,
-                      ));
-            },
-            icon: const Icon(
-              Icons.add,
-              size: 30,
-            ),
-            label: const Text(
-              "Add Task",
-            ),
-          ),
+        floatingActionButton: SpeedDial(
+          backgroundColor: kprimaryColor,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.4,
+          spacing: 12,
+          animatedIcon: AnimatedIcons.add_event,
+          children: [
+            SpeedDialChild(
+                child: Icon(CupertinoIcons.doc_checkmark_fill,
+                    color: kprimaryColor),
+                label: 'Add Task',
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AddTaskAlertDialog(
+                            assignee: assigne,
+                          ));
+                }),
+            SpeedDialChild(
+                child:
+                    Icon(CupertinoIcons.person_add_solid, color: kprimaryColor),
+                label: 'Add User',
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => UsersScreen()));
+                }),
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: getAssignee,

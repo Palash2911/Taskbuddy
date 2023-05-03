@@ -47,6 +47,7 @@ dependencies:
   intl_phone_field: ^3.1.0
   textfield_tags: ^2.0.2
   multiselect_formfield: ^0.1.7
+  flutter_speed_dial: ^6.2.0
 
 dev_dependencies:
   flutter_test:
