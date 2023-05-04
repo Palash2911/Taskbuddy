@@ -22,12 +22,16 @@ class _UsersScreenState extends State<UsersScreen> {
   final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
-  CollectionReference assigneeRef = FirebaseFirestore.instance.collection('Users');
+  CollectionReference assigneeRef =
+      FirebaseFirestore.instance.collection('Users');
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    assigneeRef = FirebaseFirestore.instance.collection('Users').doc(auth.currentUser!.uid).collection("Assignee");
+    assigneeRef = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser!.uid)
+        .collection("Assignee");
   }
 
   Future _editAssignee() async {
@@ -80,6 +84,8 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -190,7 +196,114 @@ class _UsersScreenState extends State<UsersScreen> {
                           trailing: IconButton(
                             icon: Icon(Icons.edit),
                             onPressed: () {
-                              _editAssignee();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    scrollable: true,
+                                    title: const Text(
+                                      'Add People',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.blue),
+                                    ),
+                                    content: SizedBox(
+                                      height: height * 0.20,
+                                      width: width,
+                                      child: Form(
+                                        key: _formKey,
+                                        child: SizedBox(
+                                          width: 100,
+                                          height: 100,
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                controller: _nameController,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 20,
+                                                  ),
+                                                  hintText: 'Elon Musk',
+                                                  hintStyle: const TextStyle(
+                                                      fontSize: 14),
+                                                  icon: const Icon(
+                                                    CupertinoIcons.person,
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                ),
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Please Enter a Name';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              SizedBox(
+                                                height: 10.0,
+                                              ),
+                                              TextFormField(
+                                                controller: _phoneController,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 20,
+                                                  ),
+                                                  hintText: '+91 98XXXXXXXX',
+                                                  hintStyle: const TextStyle(
+                                                      fontSize: 14),
+                                                  icon: const Icon(
+                                                    CupertinoIcons.phone,
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                  ),
+                                                ),
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty) {
+                                                    return 'Please Enter a Number';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cancel'),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                      ),
+                                      ElevatedButton(
+                                        child: const Text('Add'),
+                                        onPressed: () {
+                                          _addAssingee(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              // _editAssignee();
                             },
                           ),
                         );

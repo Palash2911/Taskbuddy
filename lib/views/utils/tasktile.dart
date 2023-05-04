@@ -43,14 +43,16 @@ class _TaskTileState extends State<TaskTile> {
         leading: Checkbox(
           value: isCompleted,
           onChanged: (bool? value) {
-            final provider =
-            Provider.of<TaskProvider>(context, listen: false);
+            final provider = Provider.of<TaskProvider>(context, listen: false);
             provider.toggleTodoStatus(widget.task);
           },
         ),
-        title: Text(widget.task.title, maxLines: 5,
-          overflow: TextOverflow.ellipsis,),
-        subtitle: FittedBox(fit: BoxFit.scaleDown,child: Text(widget.task.dueDate)),
+        title: Text(
+          widget.task.title,
+          maxLines: 5,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(widget.task.dueDate),
         trailing: SizedBox(
           width: 130,
           child: Padding(
@@ -72,7 +74,12 @@ class _TaskTileState extends State<TaskTile> {
                     },
                   ),
                 ),
-                TaskPriority(priority: widget.task.priority==0?eTaskPriority.high:widget.task.priority==1?eTaskPriority.medium:eTaskPriority.low),
+                TaskPriority(
+                    priority: widget.task.priority == 0
+                        ? eTaskPriority.high
+                        : widget.task.priority == 1
+                            ? eTaskPriority.medium
+                            : eTaskPriority.low),
               ],
             ),
           ),
