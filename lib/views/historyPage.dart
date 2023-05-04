@@ -44,7 +44,6 @@ class _HistoryPageState extends State<HistoryPage> {
                   width: double.infinity,
                   height: 500,
                   child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.all(16),
                     separatorBuilder: (context, index) => Container(height: 8),
                     itemCount: taskList.length,

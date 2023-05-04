@@ -64,6 +64,9 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Future getAssignee() async {
+    assigne.clear();
+    assigne.add("All");
+    assigne.add("Self");
     assigneeRef = await FirebaseFirestore.instance
         .collection("Users")
         .doc(auth.currentUser!.uid)
@@ -133,141 +136,143 @@ class _TaskPageState extends State<TaskPage> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
 
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: const Text(
-            'Task Buddy',
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.logout_outlined,
-                color: Colors.white,
-              ),
-              onPressed: () {},
-            )
-          ],
-          centerTitle: true,
-        ),
-        floatingActionButton: SpeedDial(
-          backgroundColor: kprimaryColor,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.4,
-          spacing: 12,
-          animatedIcon: AnimatedIcons.add_event,
-          children: [
-            SpeedDialChild(
-                child: Icon(CupertinoIcons.doc_checkmark_fill,
-                    color: kprimaryColor),
-                label: 'Add Task',
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AddTaskAlertDialog(
-                            assignee: assigne,
-                          ));
-                }),
-            SpeedDialChild(
-                child:
-                    Icon(CupertinoIcons.person_add_solid, color: kprimaryColor),
-                label: 'Add User',
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UsersScreen()));
-                }),
-          ],
-        ),
-        body: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    width: 200,
-                    height: 50.0,
-                    decoration: kInputBox,
-                    child: DropdownButton<String>(
-                      underline: const SizedBox(),
-                      hint: const FittedBox(
-                          fit: BoxFit.scaleDown, child: Text("All Assignee")),
-                      value: selectedAssigne,
-                      items: assigne.map((category) {
-                        return DropdownMenuItem<String>(
-                          value: category,
-                          child: SizedBox(
-                              height: 30,
-                              width: 150,
-                              child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(category))),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedAssigne = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 50.0,
-                    decoration: kInputBox,
-                    child: DropdownButton<String>(
-                      underline: const SizedBox(),
-                      hint: const Text('All Priority'),
-                      value: selectedPriority,
-                      items: Priority.map((category) {
-                        return DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedPriority = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
+    return RefreshIndicator(
+      onRefresh: _reload,
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: const Text(
+              'Task Buddy',
+              style: TextStyle(color: Colors.white),
             ),
-            taskList.isEmpty
-                ? const Padding(
-                    padding: EdgeInsets.only(top: 50.0),
-                    child: Center(
-                      child: Text(
-                        "No Current Task Created !",
-                        style: TextStyle(fontSize: 25),
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.logout_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              )
+            ],
+            centerTitle: true,
+          ),
+          floatingActionButton: SpeedDial(
+            backgroundColor: kprimaryColor,
+            overlayColor: Colors.black,
+            overlayOpacity: 0.4,
+            spacing: 12,
+            animatedIcon: AnimatedIcons.add_event,
+            children: [
+              SpeedDialChild(
+                  child: Icon(CupertinoIcons.doc_checkmark_fill,
+                      color: kprimaryColor),
+                  label: 'Add Task',
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AddTaskAlertDialog(
+                              assignee: assigne,
+                            ));
+                  }),
+              SpeedDialChild(
+                  child:
+                      Icon(CupertinoIcons.person_add_solid, color: kprimaryColor),
+                  label: 'Add User',
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => UsersScreen()));
+                  }),
+            ],
+          ),
+          body: Column(
+            children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: 200,
+                      height: 50.0,
+                      decoration: kInputBox,
+                      child: DropdownButton<String>(
+                        underline: const SizedBox(),
+                        hint: const FittedBox(
+                            fit: BoxFit.scaleDown, child: Text("All Assignee")),
+                        value: selectedAssigne,
+                        items: assigne.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: SizedBox(
+                                height: 30,
+                                width: 150,
+                                child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(category))),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedAssigne = newValue!;
+                          });
+                        },
                       ),
                     ),
-                  )
-                : SizedBox(
-                  width: double.infinity,
-                  height: 400,
-                  child: ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    separatorBuilder: (context, index) =>
-                        Container(height: 8),
-                    itemCount: taskList.length,
-                    itemBuilder: (context, index) {
-                      final task = taskList[index];
-                      return TaskTile(task: task);
-                    },
                   ),
-                ),
-          ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 50.0,
+                      decoration: kInputBox,
+                      child: DropdownButton<String>(
+                        underline: const SizedBox(),
+                        hint: const Text('All Priority'),
+                        value: selectedPriority,
+                        items: Priority.map((category) {
+                          return DropdownMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedPriority = newValue!;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              taskList.isEmpty
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 50.0),
+                      child: Center(
+                        child: Text(
+                          "No Current Task Created !",
+                          style: TextStyle(fontSize: 25),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                    width: double.infinity,
+                    height: 400,
+                    child: ListView.separated(
+                      scrollDirection: Axis.vertical,
+                      padding: const EdgeInsets.all(16),
+                      separatorBuilder: (context, index) =>
+                          Container(height: 8),
+                      itemCount: taskList.length,
+                      itemBuilder: (context, index) {
+                        final task = taskList[index];
+                        return TaskTile(task: task);
+                      },
+                    ),
+                  ),
+            ],
+          ),
         ),
       ),
     );
