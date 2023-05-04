@@ -20,7 +20,8 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _addformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _editformKey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   CollectionReference assigneeRef =
       FirebaseFirestore.instance.collection('Users');
@@ -42,8 +43,8 @@ class _UsersScreenState extends State<UsersScreen> {
   Future _addAssingee(BuildContext ctx) async {
     var authProvider = Provider.of<Auth>(ctx, listen: false);
     var assigneProvider = Provider.of<AssigneeProvider>(ctx, listen: false);
-    final isValid = _formKey.currentState!.validate();
-    _formKey.currentState!.save();
+    final isValid = _addformKey.currentState!.validate();
+    _addformKey.currentState!.save();
 
     if (isValid) {
       var ai = await assigneProvider
@@ -92,7 +93,7 @@ class _UsersScreenState extends State<UsersScreen> {
         children: [
           Container(
             child: Form(
-              key: _formKey,
+              key: _addformKey,
               child: Padding(
                 padding: EdgeInsets.all(18.0),
                 child: Column(
@@ -211,7 +212,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                       height: height * 0.20,
                                       width: width,
                                       child: Form(
-                                        key: _formKey,
+                                        key: _editformKey,
                                         child: SizedBox(
                                           width: 100,
                                           height: 100,
