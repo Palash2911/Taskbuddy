@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:taskbuddy/views/constants.dart';
 import 'package:taskbuddy/views/homepage.dart';
@@ -118,7 +119,7 @@ class _OtpScreenState extends State<OtpScreen> {
               child: SizedBox(
                 height: 200.0,
                 child: Image.asset(
-                  'assets/logo.png',
+                  'assets/logo2.png',
                   fit: BoxFit.contain,
                 ),
               ),
@@ -144,9 +145,10 @@ class _OtpScreenState extends State<OtpScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      const SizedBox(
-                        width: 153,
-                        height: 153,
+                      SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: Lottie.asset('assets/otp.json'),
                       ),
                       const SizedBox(
                         height: 24,
