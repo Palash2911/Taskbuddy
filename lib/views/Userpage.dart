@@ -20,6 +20,8 @@ class UsersScreen extends StatefulWidget {
 class _UsersScreenState extends State<UsersScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _editNameController = TextEditingController();
+  final _editPhoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   CollectionReference assigneeRef =
@@ -32,6 +34,10 @@ class _UsersScreenState extends State<UsersScreen> {
         .collection('Users')
         .doc(auth.currentUser!.uid)
         .collection("Assignee");
+    _editPhoneController.text = "";
+    _editNameController.text = "";
+    _nameController.text = "";
+    _phoneController.text = "";
   }
 
   Future _editAssignee() async {
@@ -80,6 +86,15 @@ class _UsersScreenState extends State<UsersScreen> {
         );
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _editNameController.dispose();
+    _editPhoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -196,13 +211,15 @@ class _UsersScreenState extends State<UsersScreen> {
                           trailing: IconButton(
                             icon: Icon(Icons.edit),
                             onPressed: () {
+                              _editNameController.text = document['Name'].toString();
+                              _editPhoneController.text = document['Contact'].toString();
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     scrollable: true,
                                     title: const Text(
-                                      'Add People',
+                                      'Edit Details',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize: 16, color: Colors.blue),
@@ -218,7 +235,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                           child: Column(
                                             children: [
                                               TextFormField(
-                                                controller: _nameController,
+                                                controller: _editNameController,
                                                 decoration: InputDecoration(
                                                   contentPadding:
                                                       const EdgeInsets
@@ -252,7 +269,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                                 height: 10.0,
                                               ),
                                               TextFormField(
-                                                controller: _phoneController,
+                                                controller: _editPhoneController,
                                                 decoration: InputDecoration(
                                                   contentPadding:
                                                       const EdgeInsets
@@ -294,7 +311,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                             Navigator.of(context).pop(),
                                       ),
                                       ElevatedButton(
-                                        child: const Text('Add'),
+                                        child: const Text('Save'),
                                         onPressed: () {
                                           _addAssingee(context);
                                         },
