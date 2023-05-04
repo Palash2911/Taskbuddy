@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:taskbuddy/models/task.dart';
+import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/constants.dart';
 import 'package:taskbuddy/views/utils/edittaskdialog.dart';
 import 'package:taskbuddy/views/utils/taskPriority.dart';
@@ -19,6 +22,20 @@ class ViewTask extends StatefulWidget {
 }
 
 class _ViewTaskState extends State<ViewTask> {
+
+  Future deleteTask(String id) async{
+    var taskProvider = Provider.of<TaskProvider>(context, listen: false).removeTodo(id);
+    Fluttertoast.showToast(
+      msg: "Task Deleted Successfully !",
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIosWeb: 1,
+      backgroundColor: kprimaryColor,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,7 +166,9 @@ class _ViewTaskState extends State<ViewTask> {
                         children: [
                           Expanded(
                             child: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  deleteTask(widget.task.id);
+                                },
                                 child: const Text("Delete Task")),
                           ),
                           SizedBox(width: 15.0),

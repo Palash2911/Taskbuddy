@@ -180,96 +180,94 @@ class _TaskPageState extends State<TaskPage> {
                 }),
           ],
         ),
-        body: RefreshIndicator(
-          onRefresh: _reload,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      width: 200,
-                      height: 50.0,
-                      decoration: kInputBox,
-                      child: DropdownButton<String>(
-                        underline: const SizedBox(),
-                        hint: const FittedBox(
-                            fit: BoxFit.scaleDown, child: Text("All Assignee")),
-                        value: selectedAssigne,
-                        items: assigne.map((category) {
-                          return DropdownMenuItem<String>(
-                            value: category,
-                            child: SizedBox(
-                                height: 30,
-                                width: 150,
-                                child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(category))),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedAssigne = newValue!;
-                          });
-                        },
-                      ),  
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      height: 50.0,
-                      decoration: kInputBox,
-                      child: DropdownButton<String>(
-                        underline: const SizedBox(),
-                        hint: const Text('All Priority'),
-                        value: selectedPriority,
-                        items: Priority.map((category) {
-                          return DropdownMenuItem<String>(
-                            value: category,
-                            child: Text(category),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedPriority = newValue!;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              taskList.isEmpty
-                  ? const Padding(
-                      padding: EdgeInsets.only(top: 50.0),
-                      child: Center(
-                        child: Text(
-                          "No Current Task Created !",
-                          style: TextStyle(fontSize: 25),
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                    width: double.infinity,
-                    height: 400,
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.all(16),
-                      separatorBuilder: (context, index) =>
-                          Container(height: 8),
-                      itemCount: taskList.length,
-                      itemBuilder: (context, index) {
-                        final task = taskList[index];
-                        return TaskTile(task: task);
+        body: Column(
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: 200,
+                    height: 50.0,
+                    decoration: kInputBox,
+                    child: DropdownButton<String>(
+                      underline: const SizedBox(),
+                      hint: const FittedBox(
+                          fit: BoxFit.scaleDown, child: Text("All Assignee")),
+                      value: selectedAssigne,
+                      items: assigne.map((category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: SizedBox(
+                              height: 30,
+                              width: 150,
+                              child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(category))),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedAssigne = newValue!;
+                        });
                       },
                     ),
                   ),
-            ],
-          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    height: 50.0,
+                    decoration: kInputBox,
+                    child: DropdownButton<String>(
+                      underline: const SizedBox(),
+                      hint: const Text('All Priority'),
+                      value: selectedPriority,
+                      items: Priority.map((category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(category),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedPriority = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            taskList.isEmpty
+                ? const Padding(
+                    padding: EdgeInsets.only(top: 50.0),
+                    child: Center(
+                      child: Text(
+                        "No Current Task Created !",
+                        style: TextStyle(fontSize: 25),
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                  width: double.infinity,
+                  height: 400,
+                  child: ListView.separated(
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    separatorBuilder: (context, index) =>
+                        Container(height: 8),
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) {
+                      final task = taskList[index];
+                      return TaskTile(task: task);
+                    },
+                  ),
+                ),
+          ],
         ),
       ),
     );

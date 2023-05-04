@@ -76,6 +76,15 @@ class TaskProvider extends ChangeNotifier {
     }
   }
 
+  Future deleteTask(String taskid) async {
+    _tasks.removeWhere((todo) => taskid == todo.id);
+
+    await db
+        .collection("Users")
+        .doc(auth.currentUser!.uid)
+        .collection("Tasks").doc(taskid).delete();
+  }
+
   static var authUser = FirebaseAuth.instance;
 
   static Stream<List<Tasks>> readTasks() => FirebaseFirestore.instance
@@ -118,4 +127,7 @@ class TaskProvider extends ChangeNotifier {
     editTask(task);
     return task.isCompleted;
   }
+
+  void removeTodo(String taskid) => deleteTask(taskid);
+
 }
