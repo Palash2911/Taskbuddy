@@ -69,7 +69,7 @@ class _TaskTileState extends State<TaskTile> {
                   decorationThickness: 2.0,
                   color: Colors.grey,
                 )
-              : TextStyle(),
+              : const TextStyle(),
         ),
         trailing: SizedBox(
           width: 130,
