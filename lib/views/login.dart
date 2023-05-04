@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
+                                        children: const <Widget>[
                                           Text(
                                             'Generate OTP',
                                           ),

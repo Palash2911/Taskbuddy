@@ -8,6 +8,7 @@ import 'package:taskbuddy/models/assigne.dart';
 import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/Userpage.dart';
+import 'package:taskbuddy/views/splashScreen.dart';
 import 'package:taskbuddy/views/utils/dialog_box.dart';
 import 'package:taskbuddy/views/utils/tasktile.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -89,6 +90,23 @@ class _TaskPageState extends State<TaskPage> {
     getAssignee();
   }
 
+  Future logout() async{
+    var authProvider = Provider.of<Auth>(context, listen: false);
+    await authProvider.signOut().then((value) {
+      Fluttertoast.showToast(
+        msg: "Log Out Successfully !",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: kprimaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (ctx) => const SplashScreen()),
+      );
+    });
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -143,7 +161,7 @@ class _TaskPageState extends State<TaskPage> {
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: const Text(
-              'Task Buddy',
+              'Gala Task',
               style: TextStyle(color: Colors.white),
             ),
             actions: [
@@ -152,7 +170,9 @@ class _TaskPageState extends State<TaskPage> {
                   Icons.logout_outlined,
                   color: Colors.white,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  logout();
+                },
               )
             ],
             centerTitle: true,

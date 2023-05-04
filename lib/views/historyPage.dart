@@ -24,7 +24,7 @@ class _HistoryPageState extends State<HistoryPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Task Buddy',
+          'Gala Task',
           style: TextStyle(color: Colors.white),
         ),
       ),
