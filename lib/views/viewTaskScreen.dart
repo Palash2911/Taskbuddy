@@ -22,9 +22,9 @@ class ViewTask extends StatefulWidget {
 }
 
 class _ViewTaskState extends State<ViewTask> {
-
-  Future deleteTask(String id) async{
-    var taskProvider = Provider.of<TaskProvider>(context, listen: false).removeTodo(id);
+  Future deleteTask(String id) async {
+    var taskProvider =
+        Provider.of<TaskProvider>(context, listen: false).removeTodo(id);
     Fluttertoast.showToast(
       msg: "Task Deleted Successfully !",
       toastLength: Toast.LENGTH_SHORT,
@@ -167,7 +167,39 @@ class _ViewTaskState extends State<ViewTask> {
                           Expanded(
                             child: OutlinedButton(
                                 onPressed: () {
-                                  deleteTask(widget.task.id);
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Delete Task'),
+                                        content: Text(
+                                            'Are you sure you want to delete this Task?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                            child: Text('No'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              deleteTask(widget.task.id);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          BottomAppBar()));
+                                            },
+                                            child: Text('Yes'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ).then((value) {
+                                    if (value != null && value) {
+                                      // Delete the item
+                                    }
+                                  });
                                 },
                                 child: const Text("Delete Task")),
                           ),
