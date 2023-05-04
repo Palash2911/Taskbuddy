@@ -22,34 +22,73 @@ class _UsersScreenState extends State<UsersScreen> {
   final _phoneController = TextEditingController();
   final _editNameController = TextEditingController();
   final _editPhoneController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _addformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _editformKey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   CollectionReference assigneeRef =
       FirebaseFirestore.instance.collection('Users');
+  var Init = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    assigneeRef = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(auth.currentUser!.uid)
-        .collection("Assignee");
-    _editPhoneController.text = "";
-    _editNameController.text = "";
-    _nameController.text = "";
-    _phoneController.text = "";
+    if(!Init)
+      {
+        assigneeRef = FirebaseFirestore.instance
+            .collection('Users')
+            .doc(auth.currentUser!.uid)
+            .collection("Assignee");
+        _nameController.text = "";
+        _phoneController.text = "";
+      }
+    Init = true;
   }
 
-  Future _editAssignee() async {
+  Future _editAssignee(String assigneId) async {
     var authProvider = Provider.of<Auth>(context, listen: false);
     var assigneProvider = Provider.of<AssigneeProvider>(context, listen: false);
+    final isValid = _editformKey.currentState!.validate();
+    _editformKey.currentState!.save();
+
+    if (isValid) {
+      var ai = await assigneProvider
+          .editAssigne(
+        Assigne(
+          id: assigneId,
+          name: _editNameController.text,
+          number: _editPhoneController.text,
+        ),
+      )
+          .then((value) {
+        Fluttertoast.showToast(
+          msg: "Assignee Edited Successfully !",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      });
+    } else {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "Please Fill Details !",
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 1,
+          backgroundColor: kprimaryColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      });
+    }
+
   }
 
   Future _addAssingee(BuildContext ctx) async {
     var authProvider = Provider.of<Auth>(ctx, listen: false);
     var assigneProvider = Provider.of<AssigneeProvider>(ctx, listen: false);
-    final isValid = _formKey.currentState!.validate();
-    _formKey.currentState!.save();
+    final isValid = _addformKey.currentState!.validate();
+    _addformKey.currentState!.save();
 
     if (isValid) {
       var ai = await assigneProvider
@@ -107,7 +146,7 @@ class _UsersScreenState extends State<UsersScreen> {
         children: [
           Container(
             child: Form(
-              key: _formKey,
+              key: _addformKey,
               child: Padding(
                 padding: EdgeInsets.all(18.0),
                 child: Column(
@@ -228,7 +267,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                       height: height * 0.20,
                                       width: width,
                                       child: Form(
-                                        key: _formKey,
+                                        key: _editformKey,
                                         child: SizedBox(
                                           width: 100,
                                           height: 100,
@@ -313,7 +352,8 @@ class _UsersScreenState extends State<UsersScreen> {
                                       ElevatedButton(
                                         child: const Text('Save'),
                                         onPressed: () {
-                                          _addAssingee(context);
+                                          _editAssignee(document.id);
+                                          Navigator.of(context).pop();
                                         },
                                       ),
                                     ],
