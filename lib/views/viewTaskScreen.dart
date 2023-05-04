@@ -145,25 +145,37 @@ class _ViewTaskState extends State<ViewTask> {
                     ),
                     const SizedBox(height: 10.0),
                     Center(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => EditTaskDialog(
-                                task: Tasks(
-                                  createdTime: widget.task.createdTime,
-                                  id: widget.task.id,
-                                  dueDate: widget.task.dueDate,
-                                  title: widget.task.title,
-                                  desc: widget.task.desc,
-                                  assignees: widget.task.assignees,
-                                  isCompleted: widget.task.isCompleted,
-                                  priority: widget.task.priority,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text("Edit Task")),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                                onPressed: () {},
+                                child: const Text("Delete Task")),
+                          ),
+                          SizedBox(width: 15.0),
+                          Expanded(
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => EditTaskDialog(
+                                      task: Tasks(
+                                        createdTime: widget.task.createdTime,
+                                        id: widget.task.id,
+                                        dueDate: widget.task.dueDate,
+                                        title: widget.task.title,
+                                        desc: widget.task.desc,
+                                        assignees: widget.task.assignees,
+                                        isCompleted: widget.task.isCompleted,
+                                        priority: widget.task.priority,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text("Edit Task")),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),
