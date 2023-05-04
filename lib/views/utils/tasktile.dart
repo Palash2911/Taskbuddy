@@ -49,10 +49,28 @@ class _TaskTileState extends State<TaskTile> {
         ),
         title: Text(
           widget.task.title,
+          style: widget.task.isCompleted
+              ? const TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: Colors.grey,
+                  decorationThickness: 2.0,
+                  color: Colors.grey,
+                )
+              : TextStyle(),
           maxLines: 5,
           overflow: TextOverflow.ellipsis,
         ),
-        subtitle: Text(widget.task.dueDate),
+        subtitle: Text(
+          widget.task.dueDate,
+          style: widget.task.isCompleted
+              ? const TextStyle(
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: Colors.grey,
+                  decorationThickness: 2.0,
+                  color: Colors.grey,
+                )
+              : TextStyle(),
+        ),
         trailing: SizedBox(
           width: 130,
           child: Padding(

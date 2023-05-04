@@ -43,7 +43,7 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
                     return const SizedBox(
                         height: 500,
                         width: 200,
-                        child: Center(child: Text("SomeError Occurred")));
+                        child: Center(child: Text("")));
                   } else {
                     final tasks = snapshot.data;
                     provider.setTodos(tasks!);
