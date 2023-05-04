@@ -158,7 +158,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         height: 10,
                       ),
                       Text(
-                        "Verification Code on $phoneNo ", //You have to do it
+                        "Verification Code on ${widget.phoneNo} ", //You have to do it
                         style: kTextPopR14,
                         textAlign: TextAlign.center,
                       ),
