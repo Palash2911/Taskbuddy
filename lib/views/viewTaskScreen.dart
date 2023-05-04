@@ -177,18 +177,14 @@ class _ViewTaskState extends State<ViewTask> {
                                         actions: [
                                           TextButton(
                                             onPressed: () {
-                                              Navigator.of(context).pop(false);
+                                              Navigator.of(context).pop();
                                             },
                                             child: Text('No'),
                                           ),
                                           TextButton(
                                             onPressed: () {
                                               deleteTask(widget.task.id);
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          BottomAppBar()));
+                                              Navigator.of(context).pop();
                                             },
                                             child: Text('Yes'),
                                           ),

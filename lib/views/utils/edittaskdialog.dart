@@ -304,7 +304,7 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
                           child: MultiSelectFormField(
                             hintWidget: const SizedBox(),
                             autovalidate: AutovalidateMode.disabled,
-                            title: const Text('Assigne'),
+                            title: const Text('Assignee'),
                             dataSource: options
                                 .map((option) => ({
                                       "display": option.toString(),
