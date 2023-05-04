@@ -10,6 +10,7 @@ import 'package:multiselect_formfield/multiselect_formfield.dart';
 import '../../models/task.dart';
 import '../../providers/task_provider.dart';
 import '../homepage.dart';
+import '../taskpage.dart';
 
 class EditTaskDialog extends StatefulWidget {
   final Tasks task;
@@ -69,7 +70,8 @@ class _EditTaskDialogState extends State<EditTaskDialog> {
     } else {
       type[2].isSelected = true;
     }
-    options = widget.task.assignees;
+    options = assigne.sublist(1);
+    selectedOptions = widget.task.assignees;
   }
 
   Future editTask() async {

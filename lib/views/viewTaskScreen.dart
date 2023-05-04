@@ -22,6 +22,7 @@ class ViewTask extends StatefulWidget {
 }
 
 class _ViewTaskState extends State<ViewTask> {
+
   Future deleteTask(String id) async {
     var taskProvider =
         Provider.of<TaskProvider>(context, listen: false).removeTodo(id);

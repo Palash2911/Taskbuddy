@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:taskbuddy/models/assigne.dart';
-import 'package:taskbuddy/providers/assignee_provider.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/Userpage.dart';
 import 'package:taskbuddy/views/splashScreen.dart';
@@ -15,6 +13,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../providers/auth_provider.dart';
 import 'constants.dart';
+
+List<String> assigne = [
+  "All",
+  "Self",
+];
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -27,11 +30,6 @@ class _TaskPageState extends State<TaskPage> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  List<String> assigne = [
-    "All",
-    "Self",
-  ];
 
   List<String> Priority = [
     "All Priority",
