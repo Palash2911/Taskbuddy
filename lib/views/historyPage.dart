@@ -37,19 +37,21 @@ class _HistoryPageState extends State<HistoryPage> {
                     ),
                   ),
                 )
-              : SizedBox(
-                  width: double.infinity,
-                  height: 500,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    separatorBuilder: (context, index) => Container(height: 8),
-                    itemCount: taskList.length,
-                    itemBuilder: (context, index) {
-                      final task = taskList[index];
-                      return TaskTile(task: task);
-                    },
+              : Expanded(
+                child: SizedBox(
+                    width: double.infinity,
+                    height: 500,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      separatorBuilder: (context, index) => Container(height: 8),
+                      itemCount: taskList.length,
+                      itemBuilder: (context, index) {
+                        final task = taskList[index];
+                        return TaskTile(task: task);
+                      },
+                    ),
                   ),
-                ),
+              ),
         ],
       ),
     );

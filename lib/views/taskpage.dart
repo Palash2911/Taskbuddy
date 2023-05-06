@@ -88,7 +88,7 @@ class _TaskPageState extends State<TaskPage> {
     getAssignee();
   }
 
-  Future logout() async{
+  Future logout() async {
     var authProvider = Provider.of<Auth>(context, listen: false);
     await authProvider.signOut().then((value) {
       Fluttertoast.showToast(
@@ -194,8 +194,8 @@ class _TaskPageState extends State<TaskPage> {
                             ));
                   }),
               SpeedDialChild(
-                  child:
-                      Icon(CupertinoIcons.person_add_solid, color: kprimaryColor),
+                  child: Icon(CupertinoIcons.person_add_solid,
+                      color: kprimaryColor),
                   label: 'Add User',
                   onTap: () {
                     Navigator.push(context,
@@ -274,20 +274,22 @@ class _TaskPageState extends State<TaskPage> {
                         ),
                       ),
                     )
-                  : SizedBox(
-                    width: double.infinity,
-                    height: 400,
-                    child: ListView.separated(
-                      scrollDirection: Axis.vertical,
-                      padding: const EdgeInsets.all(16),
-                      separatorBuilder: (context, index) =>
-                          Container(height: 8),
-                      itemCount: taskList.length,
-                      itemBuilder: (context, index) {
-                        final task = taskList[index];
-                        return TaskTile(task: task);
-                      },
-                    ),
+                  : Expanded(
+                    child: SizedBox(
+                        width: double.infinity,
+                        height: 500,
+                        child: ListView.separated(
+                          scrollDirection: Axis.vertical,
+                          padding: const EdgeInsets.all(16),
+                          separatorBuilder: (context, index) =>
+                              Container(height: 8),
+                          itemCount: taskList.length,
+                          itemBuilder: (context, index) {
+                            final task = taskList[index];
+                            return TaskTile(task: task);
+                          },
+                        ),
+                      ),
                   ),
             ],
           ),
