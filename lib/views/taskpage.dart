@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:taskbuddy/models/task.dart';
 import 'package:taskbuddy/providers/task_provider.dart';
 import 'package:taskbuddy/views/Userpage.dart';
 import 'package:taskbuddy/views/splashScreen.dart';
@@ -112,41 +114,76 @@ class _TaskPageState extends State<TaskPage> {
     super.dispose();
   }
 
+  Future shareOne(List<Tasks> taskList, String selectedAssigne) async {
+    var tasks = "";
+
+    tasks += "Assignee: ${selectedAssigne}\n";
+
+    if (taskList.isNotEmpty) {
+      taskList.forEach((element) {
+        tasks += "${element.title}\n";
+      });
+
+      await Share.share(tasks);
+    } else {
+      Fluttertoast.showToast(
+        msg: "No Tasks !",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: kprimaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  Future shareAll(
+      List<Tasks> taskList, List<String> assignee, String? priority) async {
+    assignee = assignee.sublist(1);
+    priority ??= "All Priority";
+    final provider = Provider.of<TaskProvider>(context, listen: false);
+    var tasks = "All Tasks: \n\n";
+    if (taskList.isNotEmpty) {
+      assignee.forEach((element) {
+        var taskList = provider.tasksFilter(priority!, element);
+        if (taskList.isNotEmpty) {
+          tasks += "Employee: ${element}\n";
+          taskList.forEach((element) {
+            tasks += "${element.title}\n";
+          });
+          tasks+="\n";
+        }
+      });
+
+      await Share.share(tasks);
+
+    } else {
+      Fluttertoast.showToast(
+        msg: "No Tasks !",
+        toastLength: Toast.LENGTH_SHORT,
+        timeInSecForIosWeb: 1,
+        backgroundColor: kprimaryColor,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
-    var taskList = provider.tasksFilter(3, "All");
+    var taskList = provider.tasksFilter("All Priority", "All");
     if (selectedAssigne == null) {
-      if (selectedPriority == "High") {
-        taskList = provider.tasksFilter(0, "All");
-      } else if (selectedPriority == "Medium") {
-        taskList = provider.tasksFilter(1, "All");
-      } else if (selectedPriority == "Low") {
-        taskList = provider.tasksFilter(2, "All");
+      if (selectedPriority == null) {
+        taskList = provider.tasksFilter("All Priority", "All");
       } else {
-        taskList = provider.tasksFilter(3, "All");
+        taskList = provider.tasksFilter(selectedPriority!, "All");
       }
     } else {
-      if (selectedAssigne == null) {
-        if (selectedPriority == "High") {
-          taskList = provider.tasksFilter(0, "All");
-        } else if (selectedPriority == "Medium") {
-          taskList = provider.tasksFilter(1, "All");
-        } else if (selectedPriority == "Low") {
-          taskList = provider.tasksFilter(2, "All");
-        } else {
-          taskList = provider.tasksFilter(3, "All");
-        }
+      if (selectedPriority == null) {
+        taskList = provider.tasksFilter("All Priority", selectedAssigne!);
       } else {
-        if (selectedPriority == "High") {
-          taskList = provider.tasksFilter(0, selectedAssigne!);
-        } else if (selectedPriority == "Medium") {
-          taskList = provider.tasksFilter(1, selectedAssigne!);
-        } else if (selectedPriority == "Low") {
-          taskList = provider.tasksFilter(2, selectedAssigne!);
-        } else {
-          taskList = provider.tasksFilter(3, selectedAssigne!);
-        }
+        taskList = provider.tasksFilter(selectedPriority!, selectedAssigne!);
       }
     }
     var width = MediaQuery.of(context).size.width;
@@ -171,18 +208,31 @@ class _TaskPageState extends State<TaskPage> {
                 onPressed: () {
                   logout();
                 },
-              )
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.share,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (selectedAssigne != "All" && selectedAssigne != null) {
+                    shareOne(taskList, selectedAssigne!);
+                  } else {
+                    shareAll(taskList, assigne, selectedPriority);
+                  }
+                },
+              ),
             ],
             centerTitle: true,
           ),
           floatingActionButton: FittedBox(
             child: FloatingActionButton.extended(
               onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AddTaskAlertDialog(
-                        assignee: assigne,
-                      ));
+                showDialog(
+                    context: context,
+                    builder: (context) => AddTaskAlertDialog(
+                          assignee: assigne,
+                        ));
               },
               icon: const Icon(
                 Icons.add,
@@ -265,7 +315,7 @@ class _TaskPageState extends State<TaskPage> {
                       ),
                     )
                   : Expanded(
-                    child: SizedBox(
+                      child: SizedBox(
                         width: double.infinity,
                         height: 500,
                         child: ListView.separated(
@@ -280,7 +330,7 @@ class _TaskPageState extends State<TaskPage> {
                           },
                         ),
                       ),
-                  ),
+                    ),
             ],
           ),
         ),

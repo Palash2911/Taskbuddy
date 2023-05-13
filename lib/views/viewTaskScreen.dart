@@ -172,7 +172,7 @@ class _ViewTaskState extends State<ViewTask> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: Text('Delete Task'),
-                                        content: Text(
+                                        content: const Text(
                                             'Are you sure you want to delete this Task?'),
                                         actions: [
                                           TextButton(
@@ -199,7 +199,7 @@ class _ViewTaskState extends State<ViewTask> {
                                 },
                                 child: const Text("Delete Task")),
                           ),
-                          SizedBox(width: 15.0),
+                          const SizedBox(width: 15.0),
                           Expanded(
                             child: ElevatedButton(
                                 onPressed: () {
@@ -222,16 +222,6 @@ class _ViewTaskState extends State<ViewTask> {
                                 child: const Text("Edit Task")),
                           ),
                         ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Center(
-                      child: FloatingActionButton.extended(
-                        onPressed: () {},
-                        label: Text('Share Task'),
-                        icon: Icon(Icons.share),
                       ),
                     ),
                   ],

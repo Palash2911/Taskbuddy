@@ -12,22 +12,56 @@ class TaskProvider extends ChangeNotifier {
   List<Tasks> get tasksCompleted =>
       _tasks.where((todo) => todo.isCompleted == true).toList();
 
-  List<Tasks> tasksFilter(int priority, String Assignee) {
-    if(priority == 3)
-      {
-          if(Assignee == "All") {
-            return _tasks.where((todo) => todo.isCompleted == false).toList();
-          }
-          else {
-            return _tasks.where((todo) => todo.isCompleted == false && todo.assignees.contains(Assignee)).toList();
-          }
+  List<Tasks> tasksFilter(String priority, String Assignee) {
+    if (priority == "All Priority") {
+      if (Assignee == "All") {
+        return _tasks.where((todo) => todo.isCompleted == false).toList();
+      } else {
+        return _tasks
+            .where((todo) =>
+                todo.isCompleted == false && todo.assignees.contains(Assignee))
+            .toList();
       }
-    else {
-      if(Assignee == "All") {
-        return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority).toList();
+    } else {
+      if (Assignee == "All") {
+        if (priority == "High") {
+          return _tasks
+              .where((todo) => todo.isCompleted == false && todo.priority == 0)
+              .toList();
+        } else if (priority == "Medium") {
+          return _tasks
+              .where((todo) => todo.isCompleted == false && todo.priority == 1)
+              .toList();
+        } else {
+          return _tasks
+              .where((todo) => todo.isCompleted == false && todo.priority == 2)
+              .toList();
+        }
+      } else {
+        if (priority == "High") {
+          return _tasks
+              .where((todo) =>
+                  todo.isCompleted == false &&
+                  todo.priority == 0 &&
+                  todo.assignees.contains(Assignee))
+              .toList();
+        } else if (priority == "Medium") {
+          return _tasks
+              .where((todo) =>
+                  todo.isCompleted == false &&
+                  todo.priority == 1 &&
+                  todo.assignees.contains(Assignee))
+              .toList();
+        } else {
+          return _tasks
+              .where((todo) =>
+                  todo.isCompleted == false &&
+                  todo.priority == 2 &&
+                  todo.assignees.contains(Assignee))
+              .toList();
+        }
       }
     }
-    return _tasks.where((todo) => todo.isCompleted == false && todo.priority == priority && todo.assignees.contains(Assignee)).toList();
   }
 
   Future editTask(Tasks task) async {
@@ -82,7 +116,9 @@ class TaskProvider extends ChangeNotifier {
     await db
         .collection("Users")
         .doc(auth.currentUser!.uid)
-        .collection("Tasks").doc(taskid).delete();
+        .collection("Tasks")
+        .doc(taskid)
+        .delete();
   }
 
   static var authUser = FirebaseAuth.instance;
@@ -129,5 +165,4 @@ class TaskProvider extends ChangeNotifier {
   }
 
   void removeTodo(String taskid) => deleteTask(taskid);
-
 }
