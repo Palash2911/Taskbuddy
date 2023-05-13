@@ -22,7 +22,6 @@ class ViewTask extends StatefulWidget {
 }
 
 class _ViewTaskState extends State<ViewTask> {
-
   Future deleteTask(String id) async {
     var taskProvider =
         Provider.of<TaskProvider>(context, listen: false).removeTodo(id);
@@ -224,7 +223,17 @@ class _ViewTaskState extends State<ViewTask> {
                           ),
                         ],
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(
+                      child: FloatingActionButton.extended(
+                        onPressed: () {},
+                        label: Text('Share Task'),
+                        icon: Icon(Icons.share),
+                      ),
+                    ),
                   ],
                 ),
               ),
