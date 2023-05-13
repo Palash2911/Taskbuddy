@@ -56,7 +56,6 @@ class _UsersScreenState extends State<UsersScreen> {
         Assigne(
           id: assigneId,
           name: _editNameController.text,
-          number: _editPhoneController.text,
         ),
       )
           .then((value) {
@@ -96,7 +95,6 @@ class _UsersScreenState extends State<UsersScreen> {
         Assigne(
           id: "",
           name: _nameController.text,
-          number: _phoneController.text,
         ),
       )
           .then((value) {
@@ -178,30 +176,6 @@ class _UsersScreenState extends State<UsersScreen> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    TextFormField(
-                      controller: _phoneController,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 20,
-                        ),
-                        hintText: '+91 98XXXXXXXX',
-                        hintStyle: const TextStyle(fontSize: 14),
-                        icon: const Icon(
-                          CupertinoIcons.phone,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      keyboardType: TextInputType.phone,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please Enter a Number';
-                        }
-                        return null;
-                      },
-                    ),
                   ],
                 ),
               ),
@@ -246,12 +220,10 @@ class _UsersScreenState extends State<UsersScreen> {
                       children: snapshot.data!.docs.map((document) {
                         return ListTile(
                           title: Text(document['Name'].toString()),
-                          subtitle: Text(document['Contact'].toString()),
                           trailing: IconButton(
                             icon: Icon(Icons.edit),
                             onPressed: () {
                               _editNameController.text = document['Name'].toString();
-                              _editPhoneController.text = document['Contact'].toString();
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -306,37 +278,6 @@ class _UsersScreenState extends State<UsersScreen> {
                                               ),
                                               SizedBox(
                                                 height: 10.0,
-                                              ),
-                                              TextFormField(
-                                                controller: _editPhoneController,
-                                                decoration: InputDecoration(
-                                                  contentPadding:
-                                                      const EdgeInsets
-                                                          .symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 20,
-                                                  ),
-                                                  hintText: '+91 98XXXXXXXX',
-                                                  hintStyle: const TextStyle(
-                                                      fontSize: 14),
-                                                  icon: const Icon(
-                                                    CupertinoIcons.phone,
-                                                  ),
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                  ),
-                                                ),
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                validator: (value) {
-                                                  if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'Please Enter a Number';
-                                                  }
-                                                  return null;
-                                                },
                                               ),
                                             ],
                                           ),

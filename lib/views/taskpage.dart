@@ -175,33 +175,23 @@ class _TaskPageState extends State<TaskPage> {
             ],
             centerTitle: true,
           ),
-          floatingActionButton: SpeedDial(
-            backgroundColor: kprimaryColor,
-            overlayColor: Colors.black,
-            overlayOpacity: 0.4,
-            spacing: 12,
-            animatedIcon: AnimatedIcons.add_event,
-            children: [
-              SpeedDialChild(
-                  child: Icon(CupertinoIcons.doc_checkmark_fill,
-                      color: kprimaryColor),
-                  label: 'Add Task',
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AddTaskAlertDialog(
-                              assignee: assigne,
-                            ));
-                  }),
-              SpeedDialChild(
-                  child: Icon(CupertinoIcons.person_add_solid,
-                      color: kprimaryColor),
-                  label: 'Add User',
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => UsersScreen()));
-                  }),
-            ],
+          floatingActionButton: FittedBox(
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AddTaskAlertDialog(
+                        assignee: assigne,
+                      ));
+              },
+              icon: const Icon(
+                Icons.add,
+                size: 30,
+              ),
+              label: const Text(
+                "Add Task",
+              ),
+            ),
           ),
           body: Column(
             children: [

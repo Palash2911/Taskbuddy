@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:taskbuddy/views/Userpage.dart';
 import 'package:taskbuddy/views/historyPage.dart';
 import 'package:taskbuddy/views/homepage.dart';
 import 'package:taskbuddy/views/taskpage.dart';
@@ -15,7 +17,7 @@ class MyNavigationBar extends StatefulWidget {
 class _MyNavigationBarState extends State<MyNavigationBar> {
   int _selectedIndex = 0;
 
-  final screens = [TaskPage(), HistoryPage()];
+  final screens = [TaskPage(), HistoryPage(), UsersScreen()];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -60,6 +62,10 @@ class _MyNavigationBarState extends State<MyNavigationBar> {
             BottomNavigationBarItem(
               icon: Icon(Icons.history),
               label: 'History',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.person_add_solid),
+              label: 'Assignee',
             ),
           ],
           currentIndex: _selectedIndex,

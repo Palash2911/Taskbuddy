@@ -35,7 +35,6 @@ class AssigneeProvider extends ChangeNotifier {
           .doc(assigne.id)
           .update({
         "Name": assigne.name,
-        "Contact": assigne.number,
       });
     } catch (e) {
       print(e);
@@ -51,7 +50,6 @@ class AssigneeProvider extends ChangeNotifier {
           .collection("Assignee")
           .add({
         "Name": assigne.name,
-        "Contact": assigne.number,
       });
       assigne.id = asi.id;
     } catch (e) {
@@ -74,7 +72,6 @@ class AssigneeProvider extends ChangeNotifier {
             Assigne(
               id: '',
               name: '',
-              number: '',
             ),
           );
         });
